@@ -9,7 +9,11 @@
 
 **AI-Powered Network Traffic Anomaly Detection Using Graph Neural Networks**
 
-[Documentation](docs/) | [API Docs](/swagger/) | [Dashboard](/) | [Contributing](.github/CONTRIBUTING.md)
+[![GitHub](https://img.shields.io/badge/GitHub-AjmalDanish%2FGNAT-blue.svg)](https://github.com/AjmalDanish/GNAT)
+[![Issues](https://img.shields.io/badge/Issues-11-orange.svg)](https://github.com/AjmalDanish/GNAT/issues)
+[![Pull Requests](https://img.shields.io/badge/PRs-Open-green.svg)](https://github.com/AjmalDanish/GNAT/pulls)
+
+[Documentation](docs/) | [API Docs](/swagger/) | [Dashboard](/) | [Contributing](CONTRIBUTING.md)
 
 </div>
 
@@ -127,7 +131,7 @@ Global-Network-Anomaly-Tracker/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/Global-Network-Anomaly-Tracker.git
+   git clone https://github.com/AjmalDanish/GNAT.git
    cd Global-Network-Anomaly-Tracker
    ```
 
@@ -363,8 +367,8 @@ Contributions are welcome! Please read our [Contributing Guidelines](.github/CON
 ## Support
 
 - **Documentation**: [docs/](docs/)
-- **Issues**: [GitHub Issues](https://github.com/yourusername/Global-Network-Anomaly-Tracker/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/Global-Network-Anomaly-Tracker/discussions)
+- **Issues**: [GitHub Issues](https://github.com/AjmalDanish/GNAT/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/AjmalDanish/GNAT/discussions)
 
 ## Acknowledgments
 
