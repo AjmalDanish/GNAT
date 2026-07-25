@@ -10,6 +10,7 @@ Architecture:
 
 Status: Phase 2 - Issue #1
 """
+
 from typing import Any, Optional
 import re
 from decimal import Decimal, InvalidOperation
@@ -50,15 +51,11 @@ class CityValidator:
             lat = float(latitude)
         except (ValueError, TypeError) as e:
             raise ValidationError(
-                f"Latitude must be a number, got {type(latitude).__name__}: {latitude}",
-                "latitude"
+                f"Latitude must be a number, got {type(latitude).__name__}: {latitude}", "latitude"
             ) from e
 
         if not -90 <= lat <= 90:
-            raise ValidationError(
-                f"Latitude must be between -90 and 90, got {lat}",
-                "latitude"
-            )
+            raise ValidationError(f"Latitude must be between -90 and 90, got {lat}", "latitude")
 
         return lat
 
@@ -81,14 +78,11 @@ class CityValidator:
         except (ValueError, TypeError) as e:
             raise ValidationError(
                 f"Longitude must be a number, got {type(longitude).__name__}: {longitude}",
-                "longitude"
+                "longitude",
             ) from e
 
         if not -180 <= lon <= 180:
-            raise ValidationError(
-                f"Longitude must be between -180 and 180, got {lon}",
-                "longitude"
-            )
+            raise ValidationError(f"Longitude must be between -180 and 180, got {lon}", "longitude")
 
         return lon
 
@@ -114,14 +108,11 @@ class CityValidator:
         except (ValueError, TypeError) as e:
             raise ValidationError(
                 f"Population must be an integer, got {type(population).__name__}: {population}",
-                "population"
+                "population",
             ) from e
 
         if pop < 0:
-            raise ValidationError(
-                f"Population must be non-negative, got {pop}",
-                "population"
-            )
+            raise ValidationError(f"Population must be non-negative, got {pop}", "population")
 
         return pop
 
@@ -144,16 +135,14 @@ class CityValidator:
 
         if not isinstance(timezone, str):
             raise ValidationError(
-                f"Timezone must be a string, got {type(timezone).__name__}",
-                "timezone"
+                f"Timezone must be a string, got {type(timezone).__name__}", "timezone"
             )
 
         # Basic timezone format validation (e.g., "America/New_York")
         pattern = r"^[A-Za-z]+/[A-Za-z_]+$"
         if not re.match(pattern, timezone):
             raise ValidationError(
-                f"Invalid timezone format: {timezone}. Expected format: 'Region/City'",
-                "timezone"
+                f"Invalid timezone format: {timezone}. Expected format: 'Region/City'", "timezone"
             )
 
         return timezone
@@ -177,8 +166,7 @@ class CityValidator:
 
         if not isinstance(city_name, str):
             raise ValidationError(
-                f"City name must be a string, got {type(city_name).__name__}",
-                "city_name"
+                f"City name must be a string, got {type(city_name).__name__}", "city_name"
             )
 
         # Remove extra whitespace
@@ -186,14 +174,12 @@ class CityValidator:
 
         if len(city_name) < 2:
             raise ValidationError(
-                f"City name must be at least 2 characters, got '{city_name}'",
-                "city_name"
+                f"City name must be at least 2 characters, got '{city_name}'", "city_name"
             )
 
         if len(city_name) > 100:
             raise ValidationError(
-                f"City name cannot exceed 100 characters, got {len(city_name)}",
-                "city_name"
+                f"City name cannot exceed 100 characters, got {len(city_name)}", "city_name"
             )
 
         return city_name
@@ -258,22 +244,19 @@ class CountryValidator:
 
         if not isinstance(iso_code, str):
             raise ValidationError(
-                f"ISO code must be a string, got {type(iso_code).__name__}",
-                "iso_code"
+                f"ISO code must be a string, got {type(iso_code).__name__}", "iso_code"
             )
 
         iso_code = iso_code.strip().upper()
 
         if len(iso_code) != 2:
             raise ValidationError(
-                f"ISO code must be exactly 2 characters, got {len(iso_code)}",
-                "iso_code"
+                f"ISO code must be exactly 2 characters, got {len(iso_code)}", "iso_code"
             )
 
         if not iso_code.isalpha():
             raise ValidationError(
-                f"ISO code must contain only letters, got '{iso_code}'",
-                "iso_code"
+                f"ISO code must contain only letters, got '{iso_code}'", "iso_code"
             )
 
         return iso_code
@@ -297,8 +280,7 @@ class CountryValidator:
 
         if not isinstance(iso_code_3, str):
             raise ValidationError(
-                f"ISO 3-letter code must be a string, got {type(iso_code_3).__name__}",
-                "iso_code_3"
+                f"ISO 3-letter code must be a string, got {type(iso_code_3).__name__}", "iso_code_3"
             )
 
         iso_code_3 = iso_code_3.strip().upper()
@@ -306,13 +288,12 @@ class CountryValidator:
         if len(iso_code_3) != 3:
             raise ValidationError(
                 f"ISO 3-letter code must be exactly 3 characters, got {len(iso_code_3)}",
-                "iso_code_3"
+                "iso_code_3",
             )
 
         if not iso_code_3.isalpha():
             raise ValidationError(
-                f"ISO 3-letter code must contain only letters, got '{iso_code_3}'",
-                "iso_code_3"
+                f"ISO 3-letter code must contain only letters, got '{iso_code_3}'", "iso_code_3"
             )
 
         return iso_code_3
@@ -336,8 +317,7 @@ class CountryValidator:
 
         if not isinstance(country_name, str):
             raise ValidationError(
-                f"Country name must be a string, got {type(country_name).__name__}",
-                "country_name"
+                f"Country name must be a string, got {type(country_name).__name__}", "country_name"
             )
 
         # Remove extra whitespace and title case
@@ -345,14 +325,13 @@ class CountryValidator:
 
         if len(country_name) < 2:
             raise ValidationError(
-                f"Country name must be at least 2 characters, got '{country_name}'",
-                "country_name"
+                f"Country name must be at least 2 characters, got '{country_name}'", "country_name"
             )
 
         if len(country_name) > 100:
             raise ValidationError(
                 f"Country name cannot exceed 100 characters, got {len(country_name)}",
-                "country_name"
+                "country_name",
             )
 
         return country_name
@@ -417,14 +396,11 @@ class TransactionValidator:
         except (ValueError, TypeError) as e:
             raise ValidationError(
                 f"Packet count must be an integer, got {type(packet_count).__name__}",
-                "packet_count"
+                "packet_count",
             ) from e
 
         if count <= 0:
-            raise ValidationError(
-                f"Packet count must be positive, got {count}",
-                "packet_count"
-            )
+            raise ValidationError(f"Packet count must be positive, got {count}", "packet_count")
 
         return count
 
@@ -446,15 +422,11 @@ class TransactionValidator:
             bw = float(bandwidth)
         except (ValueError, TypeError) as e:
             raise ValidationError(
-                f"Bandwidth must be a number, got {type(bandwidth).__name__}",
-                "bandwidth"
+                f"Bandwidth must be a number, got {type(bandwidth).__name__}", "bandwidth"
             ) from e
 
         if bw < 0:
-            raise ValidationError(
-                f"Bandwidth must be non-negative, got {bw}",
-                "bandwidth"
-            )
+            raise ValidationError(f"Bandwidth must be non-negative, got {bw}", "bandwidth")
 
         return bw
 
@@ -476,15 +448,11 @@ class TransactionValidator:
             lat = float(latency)
         except (ValueError, TypeError) as e:
             raise ValidationError(
-                f"Latency must be a number, got {type(latency).__name__}",
-                "latency"
+                f"Latency must be a number, got {type(latency).__name__}", "latency"
             ) from e
 
         if lat < 0:
-            raise ValidationError(
-                f"Latency must be non-negative, got {lat}",
-                "latency"
-            )
+            raise ValidationError(f"Latency must be non-negative, got {lat}", "latency")
 
         return lat
 

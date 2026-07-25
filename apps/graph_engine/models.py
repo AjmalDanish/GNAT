@@ -12,6 +12,7 @@ Architecture:
 
 Status: Phase 2 - Issue #1
 """
+
 import uuid
 from typing import Any
 
@@ -49,6 +50,7 @@ class Country(gis_models.Model):
 
     class Continent(models.TextChoices):
         """Continent enumeration for type safety."""
+
         AFRICA = "AF", _("Africa")
         ASIA = "AS", _("Asia")
         EUROPE = "EU", _("Europe")
@@ -121,6 +123,7 @@ class Country(gis_models.Model):
 
     class Meta:
         """Meta configuration for Country model."""
+
         db_table = "country"
         verbose_name = _("Country")
         verbose_name_plural = _("Countries")
@@ -139,6 +142,7 @@ class Country(gis_models.Model):
     def get_absolute_url(self) -> str:
         """Get absolute URL for country detail view."""
         from django.urls import reverse
+
         return reverse("graph_engine:country_detail", kwargs={"pk": self.pk})
 
 
@@ -231,6 +235,7 @@ class City(gis_models.Model):
 
     class Meta:
         """Meta configuration for City model."""
+
         db_table = "city"
         verbose_name = _("City")
         verbose_name_plural = _("Cities")
@@ -259,6 +264,7 @@ class City(gis_models.Model):
     def get_absolute_url(self) -> str:
         """Get absolute URL for city detail view."""
         from django.urls import reverse
+
         return reverse("graph_engine:city_detail", kwargs={"pk": self.pk})
 
     @property
@@ -300,6 +306,7 @@ class Dataset(models.Model):
 
     class DatasetStatus(models.TextChoices):
         """Dataset status enumeration."""
+
         PENDING = "PENDING", _("Pending")
         GENERATING = "GENERATING", _("Generating")
         COMPLETED = "COMPLETED", _("Completed")
@@ -394,6 +401,7 @@ class Dataset(models.Model):
 
     class Meta:
         """Meta configuration for Dataset model."""
+
         db_table = "dataset"
         verbose_name = _("Dataset")
         verbose_name_plural = _("Datasets")
@@ -413,6 +421,7 @@ class Dataset(models.Model):
     def get_absolute_url(self) -> str:
         """Get absolute URL for dataset detail view."""
         from django.urls import reverse
+
         return reverse("graph_engine:dataset_detail", kwargs={"pk": self.pk})
 
 
@@ -452,6 +461,7 @@ class Transaction(models.Model):
 
     class Protocol(models.TextChoices):
         """Network protocol enumeration."""
+
         HTTP = "HTTP", _("HTTP")
         HTTPS = "HTTPS", _("HTTPS")
         SSH = "SSH", _("SSH")
@@ -466,12 +476,14 @@ class Transaction(models.Model):
 
     class ConnectionType(models.TextChoices):
         """Connection type enumeration."""
+
         PEER_TO_PEER = "P2P", _("Peer-to-Peer")
         CLIENT_SERVER = "CLIENT_SERVER", _("Client-Server")
         HYBRID = "HYBRID", _("Hybrid")
 
     class RiskLabel(models.TextChoices):
         """Risk label enumeration."""
+
         NORMAL = "NORMAL", _("Normal")
         LOW = "LOW", _("Low Risk")
         MEDIUM = "MEDIUM", _("Medium Risk")
@@ -574,6 +586,7 @@ class Transaction(models.Model):
 
     class Meta:
         """Meta configuration for Transaction model."""
+
         db_table = "transaction"
         verbose_name = _("Transaction")
         verbose_name_plural = _("Transactions")
@@ -609,4 +622,5 @@ class Transaction(models.Model):
     def get_absolute_url(self) -> str:
         """Get absolute URL for transaction detail view."""
         from django.urls import reverse
+
         return reverse("graph_engine:transaction_detail", kwargs={"pk": self.pk})

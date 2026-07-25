@@ -27,12 +27,13 @@ Deployment:
         --error-logfile - \
         --log-level info
 """
+
 import os
 from django.core.wsgi import get_wsgi_application
 from typing import Any
 
 # Set default settings module if not set
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.production')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.production")
 
 # Get the WSGI application
 application = get_wsgi_application()
@@ -49,6 +50,7 @@ application.gnat_name = "Global Network Anomaly Tracker"
 # WSGI Application Wrapper (Optional - for custom middleware)
 # ============================================================================
 
+
 class WSGIApplicationWrapper:
     """
     Wrapper class for the WSGI application to add custom middleware
@@ -60,6 +62,7 @@ class WSGIApplicationWrapper:
     - Health checks
     - Rate limiting at the WSGI level
     """
+
     def __init__(self, app: Any) -> None:
         """
         Initialize the WSGI wrapper.
@@ -82,7 +85,7 @@ class WSGIApplicationWrapper:
         """
         # Add custom WSGI-level middleware here
         # Example: timing, logging, etc.
-        
+
         return self.app(environ, start_response)
 
 
@@ -94,6 +97,7 @@ class WSGIApplicationWrapper:
 # Health Check Endpoint (Optional - for load balancers)
 # ============================================================================
 
+
 class HealthCheckApplication:
     """
     Simple WSGI application for health checks.
@@ -104,6 +108,7 @@ class HealthCheckApplication:
     Usage:
         Map /health to this application in your WSGI server config.
     """
+
     def __init__(self, app: Any) -> None:
         """
         Initialize the health check application.
@@ -132,7 +137,7 @@ class HealthCheckApplication:
             ]
             start_response(status, headers)
             return [b"OK"]
-        
+
         return self.app(environ, start_response)
 
 
@@ -155,18 +160,18 @@ if __name__ == "__main__":
     """
     from wsgiref.simple_server import make_server
     import sys
-    
+
     # Override settings for development
     if len(sys.argv) > 1 and sys.argv[1] == "dev":
-        os.environ['DJANGO_SETTINGS_MODULE'] = 'config.settings.development'
+        os.environ["DJANGO_SETTINGS_MODULE"] = "config.settings.development"
         print("Running in development mode...")
     else:
         print("Running in production mode...")
-    
+
     host = os.environ.get("WSGI_HOST", "0.0.0.0")
     port = int(os.environ.get("WSGI_PORT", "8000"))
-    
+
     print(f"Starting WSGI server on {host}:{port}")
-    
+
     with make_server(host, port, application) as httpd:
         httpd.serve_forever()

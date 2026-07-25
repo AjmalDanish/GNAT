@@ -11,6 +11,8 @@ Usage:
     export DJANGO_SETTINGS_MODULE=config.settings.development
     python manage.py runserver
 """
+
+from pathlib import Path
 from typing import Any
 
 # Default to development if not specified

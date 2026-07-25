@@ -5,6 +5,7 @@ This module contains unit tests for graph engine models.
 
 Status: Phase 2 - Issue #1
 """
+
 import pytest
 from django.core.exceptions import ValidationError
 
@@ -111,7 +112,7 @@ class TestCityModel:
             country_name="United States",
             continent=Country.Continent.NORTH_AMERICA,
         )
-        
+
         # Valid latitude
         city = City.objects.create(
             country=country,
@@ -137,7 +138,7 @@ class TestCityModel:
             country_name="United States",
             continent=Country.Continent.NORTH_AMERICA,
         )
-        
+
         # Valid longitude
         city = City.objects.create(
             country=country,
@@ -313,7 +314,7 @@ class TestTransactionModel:
             dataset_name="Test Dataset",
             version="1.0.0",
         )
-        
+
         # Valid packet count
         transaction = Transaction.objects.create(
             dataset=dataset,

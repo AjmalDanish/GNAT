@@ -16,6 +16,7 @@ Architecture:
 
 Status: Phase 1 - App structure created, business logic in Phase 11
 """
+
 from django.apps import AppConfig
 from django.utils.translation import gettext_lazy as _
 
@@ -24,10 +25,11 @@ class AccountsConfig(AppConfig):
     """
     Configuration class for the accounts application.
     """
+
     default_auto_field = "django.db.models.BigAutoField"
     name = "apps.accounts"
     verbose_name = _("Accounts & Authentication")
-    
+
     def ready(self) -> None:
         """
         Initialize the application when Django starts.

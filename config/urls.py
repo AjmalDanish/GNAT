@@ -24,34 +24,43 @@ from django.urls import include, path
 from django.views.generic import TemplateView
 from django.views.defaults import page_not_found, server_error, permission_denied
 from rest_framework import permissions
-from drf_yasg import openapi
-from drf_yasg.views import get_schema_view
 from pathlib import Path
 from typing import Any
+
+# Conditional import for drf-yasg (API documentation)
+try:
+    from drf_yasg import openapi
+    from drf_yasg.views import get_schema_view
+    DRF_YASG_AVAILABLE = True
+except ImportError:
+    DRF_YASG_AVAILABLE = False
 
 # ============================================================================
 # Schema View (Swagger/OpenAPI)
 # ============================================================================
 
-schema_view = get_schema_view(
-    openapi.Info(
-        title="Global Network Anomaly Tracker API",
-        default_version="v1",
-        description="""
-        The GNAT API provides endpoints for:
-        - Network traffic simulation
-        - Graph generation and analytics
-        - AI-powered anomaly detection
-        - Interactive visualization
-        - User authentication and authorization
-        """,
-        terms_of_service="https://www.example.com/terms/",
-        contact=openapi.Contact(email="dev@gnat.example.com"),
-        license=openapi.License(name="MIT License"),
-    ),
-    public=True,
-    permission_classes=[permissions.AllowAny],
-)
+if DRF_YASG_AVAILABLE:
+    schema_view = get_schema_view(
+        openapi.Info(
+            title="Global Network Anomaly Tracker API",
+            default_version="v1",
+            description="""
+            The GNAT API provides endpoints for:
+            - Network traffic simulation
+            - Graph generation and analytics
+            - AI-powered anomaly detection
+            - Interactive visualization
+            - User authentication and authorization
+            """,
+            terms_of_service="https://www.example.com/terms/",
+            contact=openapi.Contact(email="dev@gnat.example.com"),
+            license=openapi.License(name="MIT License"),
+        ),
+        public=True,
+        permission_classes=[permissions.AllowAny],
+    )
+else:
+    schema_view = None
 
 
 # ============================================================================
@@ -113,24 +122,29 @@ urlpatterns: list[Any] = [
     
     # Admin
     path(settings.ADMIN_URL, admin.site.urls),
-    
-    # API Documentation (Swagger/OpenAPI)
-    path(
-        "swagger/",
-        schema_view.with_ui("swagger", cache_timeout=0),
-        name="schema-swagger-ui",
-    ),
-    path(
-        "redoc/",
-        schema_view.with_ui("redoc", cache_timeout=0),
-        name="schema-redoc",
-    ),
-    path(
-        "swagger.json",
-        schema_view.without_ui(cache_timeout=0),
-        name="schema-json",
-    ),
-    
+]
+
+# API Documentation (Swagger/OpenAPI) - only if drf-yasg is available
+if DRF_YASG_AVAILABLE:
+    urlpatterns.extend([
+        path(
+            "swagger/",
+            schema_view.with_ui("swagger", cache_timeout=0),
+            name="schema-swagger-ui",
+        ),
+        path(
+            "redoc/",
+            schema_view.with_ui("redoc", cache_timeout=0),
+            name="schema-redoc",
+        ),
+        path(
+            "swagger.json",
+            schema_view.without_ui(cache_timeout=0),
+            name="schema-json",
+        ),
+    ])
+
+urlpatterns.extend([
     # API v1
     path("api/v1/", include("apps.api.v1.routers")),
     

@@ -36,11 +36,12 @@ Or with Daphne:
         --access-log - \
         --log-level info
 """
+
 import os
 from typing import Any
 
 # Set default settings module if not set
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.production')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.production")
 
 # ============================================================================
 # Django ASGI Application
@@ -56,6 +57,7 @@ django_asgi_app = get_asgi_application()
 # WebSocket Middleware (Future - for real-time features)
 # ============================================================================
 
+
 class WebSocketMiddleware:
     """
     Middleware for handling WebSocket connections.
@@ -65,10 +67,10 @@ class WebSocketMiddleware:
     - Live anomaly alerts
     - Dashboard updates
     - Training progress updates
-    
+
     Status: PLACEHOLDER - Will be implemented when WebSocket features are added
     """
-    
+
     def __init__(self, app: Any) -> None:
         """
         Initialize the WebSocket middleware.
@@ -94,7 +96,7 @@ class WebSocketMiddleware:
         if scope.get("type") == "websocket":
             # Handle WebSocket connections
             pass
-        
+
         # Pass non-WebSocket requests to the application
         return await self.app(scope, receive, send)
 
@@ -125,15 +127,15 @@ async def lifespan(app: Any) -> Any:
     """
     # Startup
     print("ASGI application starting up...")
-    
+
     # Initialize any resources here
     # Example: load AI models, warm up caches, etc.
-    
+
     yield
-    
+
     # Shutdown
     print("ASGI application shutting down...")
-    
+
     # Clean up resources here
     # Example: close database connections, unload models, etc.
 
@@ -141,6 +143,7 @@ async def lifespan(app: Any) -> Any:
 # ============================================================================
 # Main ASGI Application
 # ============================================================================
+
 
 async def application(scope: dict[str, Any], receive: Any, send: Any) -> Any:
     """
@@ -161,16 +164,18 @@ async def application(scope: dict[str, Any], receive: Any, send: Any) -> Any:
     if scope["type"] == "http":
         # HTTP requests are handled by Django
         await django_asgi_app(scope, receive, send)
-    
+
     elif scope["type"] == "websocket":
         # WebSocket connections (future)
         # Currently, we reject WebSocket connections until implemented
-        await send({
-            "type": "websocket.close",
-            "code": 1000,
-            "reason": "WebSocket support not yet implemented",
-        })
-    
+        await send(
+            {
+                "type": "websocket.close",
+                "code": 1000,
+                "reason": "WebSocket support not yet implemented",
+            }
+        )
+
     elif scope["type"] == "lifespan":
         # Lifespan events
         async with lifespan(scope):
@@ -178,7 +183,7 @@ async def application(scope: dict[str, Any], receive: Any, send: Any) -> Any:
                 message = await receive()
                 if message["type"] == "lifespan.shutdown":
                     break
-    
+
     else:
         # Unsupported connection type
         raise ValueError(f"Unsupported ASGI connection type: {scope['type']}")
@@ -198,7 +203,7 @@ if __name__ == "__main__":
     For production deployment, always use Uvicorn or Daphne.
     """
     import sys
-    
+
     # Check if uvicorn is available
     try:
         import uvicorn
@@ -206,17 +211,17 @@ if __name__ == "__main__":
         print("uvicorn is required to run the ASGI server.")
         print("Install it with: pip install uvicorn[standard]")
         sys.exit(1)
-    
+
     # Override settings for development
     if len(sys.argv) > 1 and sys.argv[1] == "dev":
-        os.environ['DJANGO_SETTINGS_MODULE'] = 'config.settings.development'
+        os.environ["DJANGO_SETTINGS_MODULE"] = "config.settings.development"
         print("Running in development mode...")
     else:
         print("Running in production mode...")
-    
+
     host = os.environ.get("ASGI_HOST", "0.0.0.0")
     port = int(os.environ.get("ASGI_PORT", "8000"))
-    
+
     # Run with uvicorn
     uvicorn.run(
         "config.asgi:application",

@@ -11,6 +11,7 @@ Architecture:
 
 Status: Phase 2 - Issue #1
 """
+
 import logging
 from datetime import datetime, timedelta
 from random import Random
@@ -145,23 +146,26 @@ class SyntheticTrafficGenerator:
         if not cities:
             raise ValueError("No cities available for traffic generation")
 
-        city_df = pd.DataFrame([{
-            "id": str(city.id),
-            "city_name": city.city_name,
-            "country_id": str(city.country_id),
-            "population": city.population or 0,
-            "latitude": city.latitude,
-            "longitude": city.longitude,
-        } for city in cities])
+        city_df = pd.DataFrame(
+            [
+                {
+                    "id": str(city.id),
+                    "city_name": city.city_name,
+                    "country_id": str(city.country_id),
+                    "population": city.population or 0,
+                    "latitude": city.latitude,
+                    "longitude": city.longitude,
+                }
+                for city in cities
+            ]
+        )
 
         # Calculate population weights
         city_df["weight"] = np.sqrt(city_df["population"] + 1)  # Square root to reduce skew
         city_df["weight"] = city_df["weight"] / city_df["weight"].sum()
 
         # Generate transaction data
-        data = self._generate_transaction_data(
-            city_df, num_transactions, time_window_hours
-        )
+        data = self._generate_transaction_data(city_df, num_transactions, time_window_hours)
 
         # Add anomalies
         if self.anomaly_percentage > 0:
@@ -173,7 +177,9 @@ class SyntheticTrafficGenerator:
         df = df.sort_values("timestamp").reset_index(drop=True)
 
         logger.info(f"Generated {len(df)} transactions")
-        logger.info(f"Anomalies: {df['is_anomaly'].sum()} ({df['is_anomaly'].sum()/len(df)*100:.1f}%)")
+        logger.info(
+            f"Anomalies: {df['is_anomaly'].sum()} ({df['is_anomaly'].sum()/len(df)*100:.1f}%)"
+        )
 
         return df
 
@@ -269,10 +275,7 @@ class SyntheticTrafficGenerator:
         distances = {}
 
         for idx, source_row in city_df.iterrows():
-            distances[idx] = {
-                "city": source_row["city_name"],
-                "destinations": {}
-            }
+            distances[idx] = {"city": source_row["city_name"], "destinations": {}}
 
             for _, dest_row in city_df.iterrows():
                 if source_row["id"] == dest_row["id"]:
@@ -334,9 +337,7 @@ class SyntheticTrafficGenerator:
 
         return max(min_latency, base_latency)
 
-    def _calculate_bandwidth(
-        self, source_row: pd.Series, dest_row: pd.Series
-    ) -> float:
+    def _calculate_bandwidth(self, source_row: pd.Series, dest_row: pd.Series) -> float:
         """
         Calculate bandwidth based on city populations.
 

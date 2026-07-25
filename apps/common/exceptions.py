@@ -4,6 +4,7 @@ Custom Exception Handler for REST API.
 This module provides custom exception handling for the REST API,
 returning consistent error responses across the application.
 """
+
 from typing import Any
 from django.conf import settings
 from rest_framework.views import exception_handler
@@ -39,11 +40,7 @@ def custom_exception_handler(exc: Exception, context: dict[str, Any]) -> Respons
         return response
 
     # Handle non-DRF exceptions
-    logger.error(
-        f"Unhandled exception: {exc}",
-        exc_info=True,
-        extra={"context": context}
-    )
+    logger.error(f"Unhandled exception: {exc}", exc_info=True, extra={"context": context})
 
     # Return a generic error response
     return Response(

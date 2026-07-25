@@ -10,6 +10,7 @@ Architecture:
 
 Status: Phase 2 - Issue #1
 """
+
 import logging
 from typing import Optional
 
@@ -227,9 +228,11 @@ class CityRepository:
         Returns:
             QuerySet of hub cities.
         """
-        return City.objects.filter(
-            population__isnull=False
-        ).order_by("-population")[:n].select_related("country")
+        return (
+            City.objects.filter(population__isnull=False)
+            .order_by("-population")[:n]
+            .select_related("country")
+        )
 
     def get_nearby(
         self, latitude: float, longitude: float, radius_km: float = 100
@@ -394,9 +397,7 @@ class DatasetRepository:
         logger.info(f"Created dataset: {dataset}")
         return dataset
 
-    def update_status(
-        self, dataset: Dataset, status: str, record_count: int = None
-    ) -> None:
+    def update_status(self, dataset: Dataset, status: str, record_count: int = None) -> None:
         """
         Update dataset status.
 
@@ -438,12 +439,9 @@ class TransactionRepository:
             Transaction object or None.
         """
         try:
-            return (
-                Transaction.objects.select_related(
-                    "dataset", "source_city", "destination_city"
-                )
-                .get(id=transaction_id)
-            )
+            return Transaction.objects.select_related(
+                "dataset", "source_city", "destination_city"
+            ).get(id=transaction_id)
         except Transaction.DoesNotExist:
             return None
 
@@ -479,9 +477,7 @@ class TransactionRepository:
             .order_by("timestamp")
         )
 
-    def get_by_city_pair(
-        self, source_city_id: str, destination_city_id: str
-    ) -> models.QuerySet:
+    def get_by_city_pair(self, source_city_id: str, destination_city_id: str) -> models.QuerySet:
         """
         Get transactions between a city pair.
 

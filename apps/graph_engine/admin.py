@@ -10,6 +10,7 @@ Architecture:
 
 Status: Phase 2 - Issue #1
 """
+
 from django.contrib import admin
 from django.utils.html import format_html
 
@@ -118,7 +119,13 @@ class DatasetAdmin(admin.ModelAdmin):
         ),
         (
             "Metadata",
-            {"fields": ("id", "created_at",), "classes": ["collapse"]},
+            {
+                "fields": (
+                    "id",
+                    "created_at",
+                ),
+                "classes": ["collapse"],
+            },
         ),
     )
 
@@ -169,13 +176,15 @@ class TransactionAdmin(admin.ModelAdmin):
         ),
         (
             "Metrics",
-            {"fields": (
-                "packet_count",
-                "packet_size",
-                "bandwidth",
-                "latency",
-                "duration",
-            )},
+            {
+                "fields": (
+                    "packet_count",
+                    "packet_size",
+                    "bandwidth",
+                    "latency",
+                    "duration",
+                )
+            },
         ),
         (
             "Classification",

@@ -12,6 +12,7 @@ SECURITY NOTES:
 - HSTS is enabled
 - Detailed error pages are disabled
 """
+
 from .base import *  # noqa: F401, F403
 
 # ============================================================================
@@ -173,27 +174,29 @@ CELERY_TASK_EAGER_PROPAGATES = False
 # REST Framework (Production)
 # ============================================================================
 
-REST_FRAMEWORK.update({
-    # Remove browsable API in production
-    "DEFAULT_RENDERER_CLASSES": [
-        "rest_framework.renderers.JSONRenderer",
-    ],
-    # Strict permission checks
-    "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.IsAuthenticated",
-    ],
-    # Enable throttling
-    "DEFAULT_THROTTLE_CLASSES": [
-        "rest_framework.throttling.AnonRateThrottle",
-        "rest_framework.throttling.UserRateThrottle",
-    ],
-    "DEFAULT_THROTTLE_RATES": {
-        "anon": "100/day",
-        "user": "1000/hour",
-    },
-    # Use custom exception handler
-    "EXCEPTION_HANDLER": "apps.common.exceptions.custom_exception_handler",
-})
+REST_FRAMEWORK.update(
+    {
+        # Remove browsable API in production
+        "DEFAULT_RENDERER_CLASSES": [
+            "rest_framework.renderers.JSONRenderer",
+        ],
+        # Strict permission checks
+        "DEFAULT_PERMISSION_CLASSES": [
+            "rest_framework.permissions.IsAuthenticated",
+        ],
+        # Enable throttling
+        "DEFAULT_THROTTLE_CLASSES": [
+            "rest_framework.throttling.AnonRateThrottle",
+            "rest_framework.throttling.UserRateThrottle",
+        ],
+        "DEFAULT_THROTTLE_RATES": {
+            "anon": "100/day",
+            "user": "1000/hour",
+        },
+        # Use custom exception handler
+        "EXCEPTION_HANDLER": "apps.common.exceptions.custom_exception_handler",
+    }
+)
 
 
 # ============================================================================
@@ -305,10 +308,8 @@ FEATURE_REALTIME_ALERTS = env.bool("FEATURE_REALTIME_ALERTS", default=False)
 ADMIN_URL = env("ADMIN_URL", default="admin/")
 if ADMIN_URL == "admin/":
     import warnings
-    warnings.warn(
-        "Consider changing ADMIN_URL from default 'admin/' for security",
-        UserWarning
-    )
+
+    warnings.warn("Consider changing ADMIN_URL from default 'admin/' for security", UserWarning)
 
 
 # ============================================================================
@@ -326,10 +327,15 @@ RATELIMIT_API = env("RATELIMIT_API", default="1000/1h")
 
 try:
     import subprocess
-    GIT_REVISION = subprocess.check_output(
-        ["git", "rev-parse", "HEAD"],
-        cwd=PROJECT_ROOT,
-        stderr=subprocess.DEVNULL,
-    ).decode("utf-8").strip()
+
+    GIT_REVISION = (
+        subprocess.check_output(
+            ["git", "rev-parse", "HEAD"],
+            cwd=PROJECT_ROOT,
+            stderr=subprocess.DEVNULL,
+        )
+        .decode("utf-8")
+        .strip()
+    )
 except (subprocess.CalledProcessError, FileNotFoundError):
     GIT_REVISION = "unknown"

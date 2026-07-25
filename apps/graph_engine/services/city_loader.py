@@ -10,6 +10,7 @@ Architecture:
 
 Status: Phase 2 - Issue #1
 """
+
 import logging
 from pathlib import Path
 from typing import Optional
@@ -44,9 +45,7 @@ class CityDataLoader:
         self.validator = CityValidator()
         self.country_validator = CountryValidator()
 
-    def load_csv(
-        self, file_path: Path | str, encoding: str = "utf-8"
-    ) -> pd.DataFrame:
+    def load_csv(self, file_path: Path | str, encoding: str = "utf-8") -> pd.DataFrame:
         """
         Load cities from CSV file.
 
