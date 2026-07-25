@@ -11,6 +11,7 @@ Architecture:
 - Type-safe configuration loading
 - Security-first defaults
 """
+
 import os
 from pathlib import Path
 from typing import Any
@@ -61,6 +62,9 @@ SECRET_KEY: str = env(
 DEBUG: bool = env("DEBUG", default=False)
 
 ALLOWED_HOSTS: list[str] = env.list("ALLOWED_HOSTS", default=["localhost", "127.0.0.1"])
+
+# Admin URL
+ADMIN_URL: str = env("ADMIN_URL", default="admin/")
 
 # Trusted Origins for CSRF
 CSRF_TRUSTED_ORIGINS: list[str] = [
@@ -229,7 +233,7 @@ AUTH_PASSWORD_VALIDATORS: list[dict[str, str]] = [
 # Authentication
 # ============================================================================
 
-AUTH_USER_MODEL: str = "accounts.User"
+# AUTH_USER_MODEL: str = "accounts.User"  # Will be implemented in Phase 11
 
 # Session configuration
 SESSION_COOKIE_AGE: int = env("SESSION_COOKIE_AGE", default=86400)  # 24 hours
@@ -270,6 +274,11 @@ LOG_DIR: Path = Path(env("LOG_ROOT", default=str(PROJECT_ROOT / "logs")))
 # Ensure log directory exists
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 
+# Create log directories
+LOG_DIR.mkdir(parents=True, exist_ok=True)
+for subdir in ["application", "training", "prediction", "errors"]:
+    (LOG_DIR / subdir).mkdir(parents=True, exist_ok=True)
+
 LOGGING: dict[str, Any] = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -284,9 +293,7 @@ LOGGING: dict[str, Any] = {
         },
         "json": {
             "()": "pythonjsonlogger.jsonlogger.JsonFormatter",
-            "format": (
-                "%(asctime)s %(name)s %(levelname)s %(message)s %(pathname)s %(lineno)d"
-            ),
+            "format": "%(asctime)s %(name)s %(levelname)s %(message)s %(pathname)s %(lineno)d",
         },
     },
     "filters": {
@@ -504,12 +511,18 @@ EMAIL_SUBJECT_PREFIX: str = "[GNAT] "
 # Celery Configuration
 # ============================================================================
 
-CELERY_BROKER_URL: str = env("CELERY_BROKER_URL", default=env("REDIS_URL", default="redis://localhost:6379/0"))
-CELERY_RESULT_BACKEND: str = env("CELERY_RESULT_BACKEND", default=env("REDIS_URL", default="redis://localhost:6379/0"))
+CELERY_BROKER_URL: str = env(
+    "CELERY_BROKER_URL", default=env("REDIS_URL", default="redis://localhost:6379/0")
+)
+CELERY_RESULT_BACKEND: str = env(
+    "CELERY_RESULT_BACKEND", default=env("REDIS_URL", default="redis://localhost:6379/0")
+)
 CELERY_TASK_ALWAYS_EAGER: bool = env("CELERY_TASK_ALWAYS_EAGER", default=False)
 CELERY_TASK_ACKS_LATE: bool = env("CELERY_TASK_ACKS_LATE", default=True)
 CELERY_WORKER_PREFETCH_MULTIPLIER: int = env.int("CELERY_WORKER_PREFETCH_MULTIPLIER", default=1)
-CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP: bool = env("CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP", default=True)
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP: bool = env(
+    "CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP", default=True
+)
 CELERY_ACCEPT_CONTENT: list[str] = ["json"]
 CELERY_TASK_SERIALIZER: str = "json"
 CELERY_RESULT_SERIALIZER: str = "json"
@@ -534,7 +547,9 @@ DATA_ROOT.mkdir(parents=True, exist_ok=True)
 MODEL_ROOT.mkdir(parents=True, exist_ok=True)
 
 # AI Model directories
-MODEL_CHECKPOINT_DIR: Path = Path(env("MODEL_CHECKPOINT_DIR", default=str(MODEL_ROOT / "checkpoints")))
+MODEL_CHECKPOINT_DIR: Path = Path(
+    env("MODEL_CHECKPOINT_DIR", default=str(MODEL_ROOT / "checkpoints"))
+)
 MODEL_EXPORT_DIR: Path = Path(env("MODEL_EXPORT_DIR", default=str(MODEL_ROOT / "exported")))
 MODEL_TRAINED_DIR: Path = Path(env("MODEL_TRAINED_DIR", default=str(MODEL_ROOT / "trained")))
 
@@ -567,9 +582,7 @@ API_V1_PREFIX: str = env("API_V1_PREFIX", default="api/v1")
 
 # OpenCage Geocoding API
 OPENCAGE_API_KEY: str = env("OPENCAGE_API_KEY", default="")
-OPENCAGE_BASE_URL: str = env(
-    "OPENCAGE_BASE_URL", default="https://api.opencagedata.com/geocode/v1"
-)
+OPENCAGE_BASE_URL: str = env("OPENCAGE_BASE_URL", default="https://api.opencagedata.com/geocode/v1")
 
 
 # ============================================================================

@@ -9,21 +9,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Graph Engine data models (Country, City, Dataset, Transaction)
+- Synthetic traffic generator with configurable patterns (random, business, regional, international, hub-based)
+- City data loader service for CSV import with validation
+- Traffic generation with anomaly injection (spike, latency, packets)
+- Repository layer (CountryRepository, CityRepository, DatasetRepository, TransactionRepository)
+- REST API endpoints for Countries, Cities, Datasets, Transactions
+- Dataset generation API endpoint with real-time statistics
+- Admin interface configuration for all models
+- Data validation layer (CityValidator, CountryValidator, TransactionValidator)
+- Unit tests for all models
+- Support for multiple network protocols (HTTP, HTTPS, SSH, FTP, SMTP, DNS, TCP, UDP, ICMP)
+
+### Changed
+- Added faker and geopy dependencies to requirements/base.txt
+- Updated API router to include graph engine endpoints
+- Updated main config/urls.py to include graph_engine routes
+
 ### Planned Features
-- Synthetic Data Generator
 - Graph Construction Engine
 - Graph Analytics Module
 - Graph Neural Network Implementation
 - Model Training Pipeline
 - AI Inference Engine
-- Django Backend Integration
-- REST API Implementation
 - Authentication & Authorization
 - Dashboard Interface
 - Interactive World Map Visualization
 - Background Task System
-- Admin Panel
-- Comprehensive Testing
+- Admin Panel (enhanced)
+- Comprehensive Integration Tests
+- Performance Tests
 - Docker Deployment
 - Production Deployment
 - Complete Documentation
