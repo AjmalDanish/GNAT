@@ -1,0 +1,251 @@
+# ============================================================================
+# Global Network Anomaly Tracker - Docker Compose Configuration
+# ============================================================================
+#
+# This file defines the development and production Docker services:
+# - Django web application
+# - PostgreSQL database
+# - Redis (for Celery and caching)
+# - Celery worker (for background tasks)
+# - Celery beat (for scheduled tasks)
+# - Flower (for Celery monitoring)
+#
+# Usage:
+#   Development:
+#     docker-compose up -d
+#     docker-compose exec web python manage.py migrate
+#     docker-compose exec web python manage.py createsuperuser
+#
+#   Production:
+#     docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+#
+# ============================================================================
+
+version: "3.8"
+
+services:
+  # --------------------------------------------------------------------------
+  # PostgreSQL Database
+  # --------------------------------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    container_name: gnat_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME:-gnat_db}
+      POSTGRES_USER: ${DATABASE_USER:-gnat_user}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-gnat_password}
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USER:-gnat_user}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - gnat_network
+
+  # --------------------------------------------------------------------------
+  # Redis (Message Broker + Cache)
+  # --------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: gnat_redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - gnat_network
+
+  # --------------------------------------------------------------------------
+  # Django Web Application
+  # --------------------------------------------------------------------------
+  web:
+    build:
+      context: .
+      dockerfile: deployment/docker/Dockerfile
+    container_name: gnat_web
+    restart: unless-stopped
+    command: >
+      sh -c "
+        python manage.py migrate --noinput &&
+        python manage.py collectstatic --noinput &&
+        gunicorn config.wsgi:application
+          --bind 0.0.0.0:8000
+          --workers 4
+          --threads 4
+          --worker-class gthread
+          --timeout 120
+          --max-requests 1000
+          --max-requests-jitter 100
+          --access-logfile -
+          --error-logfile -
+          --log-level info
+      "
+    volumes:
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+      - models_volume:/app/models
+      - logs_volume:/app/logs
+      - data_volume:/app/data
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings.development
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - gnat_network
+
+  # --------------------------------------------------------------------------
+  # Celery Worker
+  # --------------------------------------------------------------------------
+  celery_worker:
+    build:
+      context: .
+      dockerfile: deployment/docker/Dockerfile
+    container_name: gnat_celery_worker
+    restart: unless-stopped
+    command: >
+      celery -A config.celery worker
+        --loglevel=info
+        --concurrency=4
+        --prefetch-multiplier=1
+        --max-tasks-per-child=1000
+        --queues=default,ai_tasks,graph_tasks,reports,notifications,analytics,data
+    volumes:
+      - models_volume:/app/models
+      - logs_volume:/app/logs
+      - data_volume:/app/data
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings.development
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - gnat_network
+
+  # --------------------------------------------------------------------------
+  # Celery Beat (Scheduled Tasks)
+  # --------------------------------------------------------------------------
+  celery_beat:
+    build:
+      context: .
+      dockerfile: deployment/docker/Dockerfile
+    container_name: gnat_celery_beat
+    restart: unless-stopped
+    command: >
+      celery -A config.celery beat
+        --loglevel=info
+        --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    volumes:
+      - models_volume:/app/models
+      - logs_volume:/app/logs
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings.development
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - gnat_network
+
+  # --------------------------------------------------------------------------
+  # Flower (Celery Monitoring)
+  # --------------------------------------------------------------------------
+  flower:
+    build:
+      context: .
+      dockerfile: deployment/docker/Dockerfile
+    container_name: gnat_flower
+    restart: unless-stopped
+    command: >
+      celery -A config.celery flower
+        --port=5555
+        --broker=redis://redis:6379/0
+        --basic_auth=${FLOWER_USER:-admin}:${FLOWER_PASSWORD:-admin}
+    ports:
+      - "5555:5555"
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings.development
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    env_file:
+      - .env
+    depends_on:
+      - redis
+    networks:
+      - gnat_network
+
+# --------------------------------------------------------------------------
+# Volumes
+# --------------------------------------------------------------------------
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  static_volume:
+    driver: local
+  media_volume:
+    driver: local
+  models_volume:
+    driver: local
+  logs_volume:
+    driver: local
+  data_volume:
+    driver: local
+
+# --------------------------------------------------------------------------
+# Networks
+# --------------------------------------------------------------------------
+networks:
+  gnat_network:
+    driver: bridge

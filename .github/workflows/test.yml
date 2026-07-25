@@ -1,0 +1,197 @@
+# ============================================================================
+# Global Network Anomaly Tracker - Test Workflow
+# ============================================================================
+#
+# This workflow runs the test suite on multiple Python versions
+# and with different configurations.
+#
+# ============================================================================
+
+name: Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  # --------------------------------------------------------------------------
+  # Matrix Testing
+  # --------------------------------------------------------------------------
+  test:
+    name: Test (Python ${{ matrix.python-version }}, ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ["3.12"]
+    
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: gnat_test_db
+          POSTGRES_USER: gnat_test_user
+          POSTGRES_PASSWORD: gnat_test_password
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+      
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements/testing.txt
+      
+      - name: Run tests
+        env:
+          DJANGO_SETTINGS_MODULE: config.settings.testing
+          DATABASE_URL: postgresql://gnat_test_user:gnat_test_password@localhost:5432/gnat_test_db
+          REDIS_URL: redis://localhost:6379/0
+        run: pytest --cov=apps --cov-report=xml --cov-report=html --verbose
+      
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report-${{ matrix.os }}-py${{ matrix.python-version }}
+          path: htmlcov/
+      
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage.xml
+          flags: unittests-${{ matrix.os }}-py${{ matrix.python-version }}
+          name: codecov-umbrella
+
+  # --------------------------------------------------------------------------
+  # Integration Tests
+  # --------------------------------------------------------------------------
+  integration:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: gnat_test_db
+          POSTGRES_USER: gnat_test_user
+          POSTGRES_PASSWORD: gnat_test_password
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+      
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements/testing.txt
+      
+      - name: Run integration tests
+        env:
+          DJANGO_SETTINGS_MODULE: config.settings.testing
+          DATABASE_URL: postgresql://gnat_test_user:gnat_test_password@localhost:5432/gnat_test_db
+          REDIS_URL: redis://localhost:6379/0
+        run: pytest -m integration --verbose
+
+  # --------------------------------------------------------------------------
+  # Performance Tests
+  # --------------------------------------------------------------------------
+  performance:
+    name: Performance Tests
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: gnat_test_db
+          POSTGRES_USER: gnat_test_user
+          POSTGRES_PASSWORD: gnat_test_password
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+      
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements/testing.txt
+      
+      - name: Run performance tests
+        env:
+          DJANGO_SETTINGS_MODULE: config.settings.testing
+          DATABASE_URL: postgresql://gnat_test_user:gnat_test_password@localhost:5432/gnat_test_db
+          REDIS_URL: redis://localhost:6379/0
+        run: pytest -m performance --benchmark-only

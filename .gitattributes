@@ -1,0 +1,166 @@
+# ============================================================================
+# Global Network Anomaly Tracker - Git Attributes
+# ============================================================================
+#
+# This file defines how Git should handle various file types.
+# ============================================================================
+
+# Auto-detect text files and normalize line endings to LF
+* text=auto
+
+# Explicitly declare text files that should always use CRLF in working directory
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Explicitly declare text files that should always use LF in working directory
+*.py text eol=lf
+*.sh text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.toml text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+*.cfg text eol=lf
+*.ini text eol=lf
+*.conf text eol=lf
+
+# Python files
+*.py diff=python
+__pycache__/** linguist-generated=true
+*.pyc linguist-generated=true
+
+# Jupyter Notebooks
+*.ipynb linguist-language=Jupyter Notebook
+
+# Docker files
+Dockerfile* linguist-language=Dockerfile
+*.dockerfile linguist-language=Dockerfile
+
+# YAML files
+*.yml linguist-language=YAML
+*.yaml linguist-language=YAML
+
+# JSON files
+*.json linguist-language=JSON
+
+# Markdown files
+*.md linguist-language=Markdown
+
+# Configuration files
+*.toml linguist-language=TOML
+*.cfg linguist-language=INI
+*.ini linguist-language=INI
+*.conf linguist-language=INI
+
+# Shell scripts
+*.sh linguist-language=Shell
+
+# Documentation
+LICENSE linguist-language=Text
+COPYING linguist-language=Text
+AUTHORS linguist-language=Text
+CHANGELOG linguist-language=Text
+CONTRIBUTING linguist-language=Text
+
+# Ignore line endings in Git LFS files (if using LFS)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.bmp binary
+*.ico binary
+*.svg binary
+*.pdf binary
+*.zip binary
+*.tar binary
+*.gz binary
+*.bz2 binary
+*.7z binary
+*.rar binary
+*.pkl binary
+*.pth binary
+*.pt binary
+*.onnx binary
+*.h5 binary
+*.model binary
+*.safetensors binary
+
+# Model files (binary)
+models/** binary linguist-generated=true
+
+# Data files (binary)
+data/** binary linguist-generated=true
+
+# Log files
+logs/** linguist-generated=true
+
+# Compiled files
+*.pyc linguist-generated=true
+*.pyo linguist-generated=true
+*.pyd linguist-generated=true
+*.so linguist-generated=true
+*.dylib linguist-generated=true
+*.dll linguist-generated=true
+*.exe linguist-generated=true
+
+# Package files
+*.egg linguist-generated=true
+*.egg-info/** linguist-generated=true
+dist/** linguist-generated=true
+build/** linguist-generated=true
+
+# Cache directories
+.cache/** linguist-generated=true
+.mypy_cache/** linguist-generated=true
+.pytest_cache/** linguist-generated=true
+.hypothesis/** linguist-generated=true
+.coverage linguist-generated=true
+htmlcov/** linguist-generated=true
+.tox/** linguist-generated=true
+.venv/** linguist-generated=true
+venv/** linguist-generated=true
+.env/** linguist-generated=true
+
+# IDE specific
+.idea/** linguist-generated=true
+.vscode/** linguist-generated=true
+*.swp linguist-generated=true
+*.swo linguist-generated=true
+*~ linguist-generated=true
+.DS_Store linguist-generated=true
+
+# Django
+*.log linguist-generated=true
+db.sqlite3 linguist-generated=true
+db.sqlite3-journal linguist-generated=true
+staticfiles/** linguist-generated=true
+media/** linguist-generated=true
+
+# Celery
+celerybeat-schedule linguist-generated=true
+celerybeat.pid linguist-generated=true
+
+# Testing
+.coverage linguist-generated=true
+coverage.xml linguist-generated=true
+*.cover linguist-generated=true
+nosetests.xml linguist-generated=true
+.pytest_cache/** linguist-generated=true
+htmlcov/** linguist-generated=true
+.coverage.* linguist-generated=true
+
+# Documentation build
+docs/_build/** linguist-generated=true
+docs/site/** linguist-generated=true
+
+# Temporary files
+*.bak linguist-generated=true
+*.backup linguist-generated=true
+*.tmp linguist-generated=true
+*.temp linguist-generated=true
+
+# File sizes for diff
+*.csv diff=csv
+*.tsv diff=tsv

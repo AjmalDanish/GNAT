@@ -1,0 +1,176 @@
+# ============================================================================
+# Global Network Anomaly Tracker - CI Workflow
+# ============================================================================
+#
+# This workflow runs on every push and pull request to:
+# - Lint code with flake8, black, isort
+# - Type check with mypy
+# - Run tests with pytest
+# - Check test coverage
+#
+# ============================================================================
+
+name: Continuous Integration
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  # --------------------------------------------------------------------------
+  # Code Quality Checks
+  # --------------------------------------------------------------------------
+  lint:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+      
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements/development.txt
+      
+      - name: Check code formatting with Black
+        run: black --check .
+      
+      - name: Check import sorting with isort
+        run: isort --check-only .
+      
+      - name: Lint with flake8
+        run: flake8 .
+      
+      - name: Type check with mypy
+        run: mypy config apps --ignore-missing-imports
+
+  # --------------------------------------------------------------------------
+  # Tests
+  # --------------------------------------------------------------------------
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    needs: lint
+    
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: gnat_test_db
+          POSTGRES_USER: gnat_test_user
+          POSTGRES_PASSWORD: gnat_test_password
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+      
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements/testing.txt
+      
+      - name: Run tests
+        env:
+          DJANGO_SETTINGS_MODULE: config.settings.testing
+          DATABASE_URL: postgresql://gnat_test_user:gnat_test_password@localhost:5432/gnat_test_db
+          REDIS_URL: redis://localhost:6379/0
+        run: pytest --cov=apps --cov-report=xml --cov-report=term-missing --verbose
+      
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage.xml
+          flags: unittests
+          name: codecov-umbrella
+
+  # --------------------------------------------------------------------------
+  # Security Scan
+  # --------------------------------------------------------------------------
+  security:
+    name: Security
+    runs-on: ubuntu-latest
+    needs: lint
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install safety bandit
+      
+      - name: Run safety check
+        run: safety check --full-report || true
+      
+      - name: Run bandit security linter
+        run: bandit -r apps config -f json -o bandit-report.json || true
+      
+      - name: Upload bandit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: bandit-report
+          path: bandit-report.json
+
+  # --------------------------------------------------------------------------
+  # Build Docker Image
+  # --------------------------------------------------------------------------
+  build:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    needs: [lint, test]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: deployment/docker/Dockerfile
+          push: false
+          tags: gnat:latest
+          cache-from: type=registry,ref=gnat:buildcache
+          cache-to: type=registry,ref=gnat:buildcache,mode=max

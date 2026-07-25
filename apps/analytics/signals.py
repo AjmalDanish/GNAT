@@ -1,0 +1,1 @@
+"""Signals for Analytics Application."""
