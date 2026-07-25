@@ -17,12 +17,22 @@ from rest_framework.routers import DefaultRouter
 # Create a router and register our ViewSets
 router: DefaultRouter = routers.DefaultRouter()
 
-# Register viewsets here (Phase 13)
+# Register viewsets here
+# Accounts (Phase 11)
 # router.register(r"users", accounts_views.UserViewSet, basename="user")
-# router.register(r"graphs", graph_engine_views.GraphViewSet, basename="graph")
+
+# Graph Engine (Phase 2 - Partial)
+router.register(r"graph/countries", None, basename="country")  # Included from graph_engine
+router.register(r"graph/cities", None, basename="city")  # Included from graph_engine
+router.register(r"graph/datasets", None, basename="dataset")  # Included from graph_engine
+router.register(r"graph/transactions", None, basename="transaction")  # Included from graph_engine
+router.register(r"graph/generation", None, basename="generation")  # Included from graph_engine
+
+# AI Engine (Phase 5-7)
 # router.register(r"models", ai_engine_views.ModelViewSet, basename="model")
 # router.register(r"predictions", ai_engine_views.PredictionViewSet, basename="prediction")
-# router.register(r"datasets", graph_engine_views.DatasetViewSet, basename="dataset")
+
+# Analytics (Phase 17)
 # router.register(r"analytics", analytics_views.AnalyticsViewSet, basename="analytics")
 
 # Additional API patterns
