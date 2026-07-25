@@ -515,7 +515,8 @@ CELERY_BROKER_URL: str = env(
     "CELERY_BROKER_URL", default=env("REDIS_URL", default="redis://localhost:6379/0")
 )
 CELERY_RESULT_BACKEND: str = env(
-    "CELERY_RESULT_BACKEND", default=env("REDIS_URL", default="redis://localhost:6379/0")
+    "CELERY_RESULT_BACKEND",
+    default=env("REDIS_URL", default="redis://localhost:6379/0"),
 )
 CELERY_TASK_ALWAYS_EAGER: bool = env("CELERY_TASK_ALWAYS_EAGER", default=False)
 CELERY_TASK_ACKS_LATE: bool = env("CELERY_TASK_ACKS_LATE", default=True)

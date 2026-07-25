@@ -103,7 +103,11 @@ urlpatterns: list[Any] = [
 # API Documentation (Swagger/OpenAPI) - only if drf-yasg is available
 if DRF_YASG_AVAILABLE:
     urlpatterns.append(
-        path("swagger/", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui")
+        path(
+            "swagger/",
+            schema_view.with_ui("swagger", cache_timeout=0),
+            name="schema-swagger-ui",
+        )
     )
     urlpatterns.append(
         path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc")

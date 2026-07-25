@@ -51,7 +51,8 @@ class CityValidator:
             lat = float(latitude)
         except (ValueError, TypeError) as e:
             raise ValidationError(
-                f"Latitude must be a number, got {type(latitude).__name__}: {latitude}", "latitude"
+                f"Latitude must be a number, got {type(latitude).__name__}: {latitude}",
+                "latitude",
             ) from e
 
         if not -90 <= lat <= 90:
@@ -142,7 +143,8 @@ class CityValidator:
         pattern = r"^[A-Za-z]+/[A-Za-z_]+$"
         if not re.match(pattern, timezone):
             raise ValidationError(
-                f"Invalid timezone format: {timezone}. Expected format: 'Region/City'", "timezone"
+                f"Invalid timezone format: {timezone}. Expected format: 'Region/City'",
+                "timezone",
             )
 
         return timezone
@@ -166,7 +168,8 @@ class CityValidator:
 
         if not isinstance(city_name, str):
             raise ValidationError(
-                f"City name must be a string, got {type(city_name).__name__}", "city_name"
+                f"City name must be a string, got {type(city_name).__name__}",
+                "city_name",
             )
 
         # Remove extra whitespace
@@ -174,12 +177,14 @@ class CityValidator:
 
         if len(city_name) < 2:
             raise ValidationError(
-                f"City name must be at least 2 characters, got '{city_name}'", "city_name"
+                f"City name must be at least 2 characters, got '{city_name}'",
+                "city_name",
             )
 
         if len(city_name) > 100:
             raise ValidationError(
-                f"City name cannot exceed 100 characters, got {len(city_name)}", "city_name"
+                f"City name cannot exceed 100 characters, got {len(city_name)}",
+                "city_name",
             )
 
         return city_name
@@ -251,7 +256,8 @@ class CountryValidator:
 
         if len(iso_code) != 2:
             raise ValidationError(
-                f"ISO code must be exactly 2 characters, got {len(iso_code)}", "iso_code"
+                f"ISO code must be exactly 2 characters, got {len(iso_code)}",
+                "iso_code",
             )
 
         if not iso_code.isalpha():
@@ -280,7 +286,8 @@ class CountryValidator:
 
         if not isinstance(iso_code_3, str):
             raise ValidationError(
-                f"ISO 3-letter code must be a string, got {type(iso_code_3).__name__}", "iso_code_3"
+                f"ISO 3-letter code must be a string, got {type(iso_code_3).__name__}",
+                "iso_code_3",
             )
 
         iso_code_3 = iso_code_3.strip().upper()
@@ -293,7 +300,8 @@ class CountryValidator:
 
         if not iso_code_3.isalpha():
             raise ValidationError(
-                f"ISO 3-letter code must contain only letters, got '{iso_code_3}'", "iso_code_3"
+                f"ISO 3-letter code must contain only letters, got '{iso_code_3}'",
+                "iso_code_3",
             )
 
         return iso_code_3
@@ -317,7 +325,8 @@ class CountryValidator:
 
         if not isinstance(country_name, str):
             raise ValidationError(
-                f"Country name must be a string, got {type(country_name).__name__}", "country_name"
+                f"Country name must be a string, got {type(country_name).__name__}",
+                "country_name",
             )
 
         # Remove extra whitespace and title case
@@ -325,7 +334,8 @@ class CountryValidator:
 
         if len(country_name) < 2:
             raise ValidationError(
-                f"Country name must be at least 2 characters, got '{country_name}'", "country_name"
+                f"Country name must be at least 2 characters, got '{country_name}'",
+                "country_name",
             )
 
         if len(country_name) > 100:
@@ -422,7 +432,8 @@ class TransactionValidator:
             bw = float(bandwidth)
         except (ValueError, TypeError) as e:
             raise ValidationError(
-                f"Bandwidth must be a number, got {type(bandwidth).__name__}", "bandwidth"
+                f"Bandwidth must be a number, got {type(bandwidth).__name__}",
+                "bandwidth",
             ) from e
 
         if bw < 0:

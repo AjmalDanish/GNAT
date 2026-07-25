@@ -53,7 +53,14 @@ class CountryAdmin(admin.ModelAdmin):
 class CityAdmin(admin.ModelAdmin):
     """Admin configuration for City model."""
 
-    list_display = ["city_name", "country", "latitude", "longitude", "population", "created_at"]
+    list_display = [
+        "city_name",
+        "country",
+        "latitude",
+        "longitude",
+        "population",
+        "created_at",
+    ]
     list_filter = ["country", "created_at"]
     search_fields = ["city_name", "country__country_name"]
     readonly_fields = ["id", "created_at", "updated_at"]
