@@ -71,6 +71,21 @@ LOGGING["handlers"]["console"]["level"] = "DEBUG"
 # Database (Development)
 # ============================================================================
 
+# Use SQLite for development
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+        "ATOMIC_REQUESTS": True,
+        "OPTIONS": {
+            "timeout": 20,
+        },
+    }
+}
+
+# Enable timezone support for SQLite
+USE_TZ = True
+
 # Display SQL queries in console
 if SHOW_SQL_QUERIES:
     LOGGING["loggers"]["django.db.backends"] = {

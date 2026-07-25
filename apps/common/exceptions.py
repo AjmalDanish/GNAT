@@ -5,12 +5,13 @@ This module provides custom exception handling for the REST API,
 returning consistent error responses across the application.
 """
 
-from typing import Any
-from django.conf import settings
-from rest_framework.views import exception_handler
-from rest_framework.response import Response
-from rest_framework import status
 import logging
+from typing import Any
+
+from django.conf import settings
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import exception_handler
 
 logger = logging.getLogger(__name__)
 

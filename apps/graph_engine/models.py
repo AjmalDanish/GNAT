@@ -7,7 +7,6 @@ about countries worldwide. It serves as a reference for City records.
 Architecture:
 - Follows Django ORM conventions
 - Uses UUID primary key
-- Supports geographic queries
 - Clean Architecture: Domain Layer
 
 Status: Phase 2 - Issue #1
@@ -16,12 +15,11 @@ Status: Phase 2 - Issue #1
 import uuid
 from typing import Any
 
-from django.contrib.gis.db import models as gis_models
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
-class Country(gis_models.Model):
+class Country(models.Model):
     """
     Country model representing countries worldwide.
 
@@ -146,7 +144,7 @@ class Country(gis_models.Model):
         return reverse("graph_engine:country_detail", kwargs={"pk": self.pk})
 
 
-class City(gis_models.Model):
+class City(models.Model):
     """
     City model representing cities worldwide.
 

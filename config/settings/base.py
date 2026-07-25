@@ -63,6 +63,9 @@ DEBUG: bool = env("DEBUG", default=False)
 
 ALLOWED_HOSTS: list[str] = env.list("ALLOWED_HOSTS", default=["localhost", "127.0.0.1"])
 
+# Admin URL
+ADMIN_URL: str = env("ADMIN_URL", default="admin/")
+
 # Trusted Origins for CSRF
 CSRF_TRUSTED_ORIGINS: list[str] = [
     f"https://{host}" for host in ALLOWED_HOSTS if host not in ["localhost", "127.0.0.1"]
@@ -230,7 +233,7 @@ AUTH_PASSWORD_VALIDATORS: list[dict[str, str]] = [
 # Authentication
 # ============================================================================
 
-AUTH_USER_MODEL: str = "accounts.User"
+# AUTH_USER_MODEL: str = "accounts.User"  # Will be implemented in Phase 11
 
 # Session configuration
 SESSION_COOKIE_AGE: int = env("SESSION_COOKIE_AGE", default=86400)  # 24 hours
@@ -270,6 +273,11 @@ LOG_DIR: Path = Path(env("LOG_ROOT", default=str(PROJECT_ROOT / "logs")))
 
 # Ensure log directory exists
 LOG_DIR.mkdir(parents=True, exist_ok=True)
+
+# Create log directories
+LOG_DIR.mkdir(parents=True, exist_ok=True)
+for subdir in ["application", "training", "prediction", "errors"]:
+    (LOG_DIR / subdir).mkdir(parents=True, exist_ok=True)
 
 LOGGING: dict[str, Any] = {
     "version": 1,

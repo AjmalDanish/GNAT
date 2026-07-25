@@ -12,12 +12,11 @@ Usage:
     python manage.py runserver
 """
 
-from pathlib import Path
-from typing import Any
-
 # Default to development if not specified
 import os
 import sys
+from pathlib import Path
+from typing import Any
 
 # This allows Django to find settings via python path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))

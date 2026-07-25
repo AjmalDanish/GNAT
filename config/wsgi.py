@@ -29,8 +29,9 @@ Deployment:
 """
 
 import os
-from django.core.wsgi import get_wsgi_application
 from typing import Any
+
+from django.core.wsgi import get_wsgi_application
 
 # Set default settings module if not set
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.production")
@@ -158,8 +159,8 @@ if __name__ == "__main__":
 
     For production deployment, always use Gunicorn or uWSGI.
     """
-    from wsgiref.simple_server import make_server
     import sys
+    from wsgiref.simple_server import make_server
 
     # Override settings for development
     if len(sys.argv) > 1 and sys.argv[1] == "dev":

@@ -15,7 +15,7 @@ import logging
 from typing import Optional
 
 from django.db import models
-from django.db.models import Q, Count
+from django.db.models import Count, Q
 
 from .models import City, Country, Dataset, Transaction
 

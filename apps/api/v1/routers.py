@@ -11,7 +11,7 @@ Architecture:
 Status: Placeholder routers, will be implemented in Phase 13
 """
 
-from django.urls import path, include
+from django.urls import include, path
 from rest_framework import routers
 from rest_framework.routers import DefaultRouter
 

@@ -36,10 +36,11 @@ Monitoring:
 """
 
 import os
+from typing import Any
+
 from celery import Celery
 from celery.schedules import crontab
 from django.conf import settings
-from typing import Any
 
 # Set the default Django settings module
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.production")
@@ -194,16 +195,17 @@ app.conf.update(
 # Signals (Task Lifecycle Events)
 # ============================================================================
 
+import logging
+
 from celery.signals import (
-    task_prerun,
-    task_postrun,
     task_failure,
-    task_success,
+    task_postrun,
+    task_prerun,
     task_revoked,
+    task_success,
     worker_ready,
     worker_shutdown,
 )
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -325,6 +327,7 @@ def worker_shutdown_handler(sender: Any = None, **kwargs: Any) -> None:
 # ============================================================================
 
 from functools import wraps
+
 from celery.exceptions import Retry
 
 

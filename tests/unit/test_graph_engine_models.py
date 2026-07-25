@@ -6,8 +6,11 @@ This module contains unit tests for graph engine models.
 Status: Phase 2 - Issue #1
 """
 
+import datetime
+
 import pytest
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 
 from apps.graph_engine.models import City, Country, Dataset, Transaction
 
@@ -240,6 +243,7 @@ class TestTransactionModel:
             packet_count=100,
             bandwidth=1000.0,
             latency=100.5,
+            timestamp="2024-01-01T00:00:00Z",
         )
         assert transaction.id is not None
         assert transaction.source_city == city1
@@ -281,6 +285,7 @@ class TestTransactionModel:
             packet_count=100,
             bandwidth=1000.0,
             latency=100.5,
+            timestamp="2024-01-01T00:00:00Z",
         )
         assert "New York" in str(transaction)
         assert "London" in str(transaction)
@@ -324,6 +329,7 @@ class TestTransactionModel:
             packet_count=100,
             bandwidth=1000.0,
             latency=100.5,
+            timestamp="2024-01-01T00:00:00Z",
         )
         assert transaction.packet_count == 100
 
@@ -337,4 +343,5 @@ class TestTransactionModel:
                 packet_count=0,
                 bandwidth=1000.0,
                 latency=100.5,
+                timestamp="2024-01-01T00:00:00Z",
             )

@@ -99,7 +99,7 @@ class DatasetAdmin(admin.ModelAdmin):
     search_fields = ["dataset_name", "description"]
     readonly_fields = ["id", "created_at", "checksum"]
     ordering = ["-created_at"]
-    autocomplete_fields = ["created_by"]
+    # autocomplete_fields = ["created_by"]  # User model not available yet (Phase 11)
     fieldsets = (
         (
             "Identification",

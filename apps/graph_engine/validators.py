@@ -11,9 +11,9 @@ Architecture:
 Status: Phase 2 - Issue #1
 """
 
-from typing import Any, Optional
 import re
 from decimal import Decimal, InvalidOperation
+from typing import Any, Optional
 
 
 class ValidationError(Exception):
