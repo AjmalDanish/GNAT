@@ -233,11 +233,9 @@ class TestGraphMetricsEdgeCases:
         backend = NetworkXBackend()
         metrics = GraphMetrics(backend)
 
-        try:
-            assert False, "Should raise KeyError"
-        except KeyError:
-            # Expected behavior
-            pass
+        # NetworkX raises KeyError for nonexistent nodes
+        with pytest.raises(KeyError):
+            metrics.get_node_summary("nonexistent")
 
     def test_get_graph_summary_complete(self):
         """Test complete graph summary."""

@@ -163,7 +163,7 @@ class TestGraphBuilderEdgeCases:
             latitude=40.7128,
             longitude=-74.0060,
         )
-        city3 = City.objects.create(
+        city2 = City.objects.create(
             country=country,
             city_name="Chicago",
             latitude=41.8781,
@@ -189,7 +189,7 @@ class TestGraphBuilderEdgeCases:
         builder = GraphBuilder()
         result = builder.build_from_dataset(dataset.id)
 
-        assert result["node_count"] == 2  # city3 not included
+        assert result["node_count"] == 2  # Only city1 and city2 in graph
         assert result["edge_count"] == 1
 
     def test_build_without_edges(self, db):
