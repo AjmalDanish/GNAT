@@ -170,8 +170,9 @@ class TestGraphBuilder:
 
     def test_node_attributes_from_city(self, db):
         """Test that node attributes are populated from city data."""
-        from apps.graph_engine.models import City, Country, Dataset, Transaction
         from django.utils import timezone
+
+        from apps.graph_engine.models import City, Country, Dataset, Transaction
 
         country = Country.objects.create(
             iso_code="US",

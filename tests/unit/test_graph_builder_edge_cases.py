@@ -3,11 +3,12 @@ Additional Unit Tests for GraphBuilder Service.
 
 Status: Phase 2 - Graph Construction Engine - Coverage Expansion
 """
+
+from django.utils import timezone
+
 import pytest
-from datetime import datetime, timezone
 
 from apps.graph_engine.services.graph_builder import GraphBuilder
-from apps.graph_engine.backends.networkx_backend import NetworkXBackend
 
 
 @pytest.mark.django_db
@@ -48,7 +49,7 @@ class TestGraphBuilderEdgeCases:
             packet_count=100,
             bandwidth=1000.0,
             latency=100.5,
-            timestamp=datetime.now(timezone.utc),
+            timestamp=timezone.now(),
         )
 
         builder = GraphBuilder()
@@ -94,7 +95,7 @@ class TestGraphBuilderEdgeCases:
                 packet_count=100 + i,
                 bandwidth=1000.0,
                 latency=100.0 + i,
-                timestamp=datetime.now(timezone.utc),
+                timestamp=timezone.now(),
             )
 
         builder = GraphBuilder()
@@ -137,7 +138,7 @@ class TestGraphBuilderEdgeCases:
             packet_count=100,
             bandwidth=1000.0,
             latency=0.0,
-            timestamp=datetime.now(timezone.utc),
+            timestamp=timezone.now(),
         )
 
         builder = GraphBuilder()
@@ -188,7 +189,7 @@ class TestGraphBuilderEdgeCases:
             packet_count=100,
             bandwidth=1000.0,
             latency=100.5,
-            timestamp=datetime.now(timezone.utc),
+            timestamp=timezone.now(),
         )
 
         builder = GraphBuilder()
@@ -258,7 +259,7 @@ class TestGraphBuilderEdgeCases:
             packet_count=100,
             bandwidth=1000.0,
             latency=100.5,
-            timestamp=datetime.now(timezone.utc),
+            timestamp=timezone.now(),
         )
 
         # First build
@@ -278,9 +279,7 @@ class TestGraphBuilderEdgeCases:
         import uuid
 
         builder = GraphBuilder()
-        result = builder.build_from_city_pairs(
-            uuid.uuid4(), uuid.uuid4()
-        )
+        result = builder.build_from_city_pairs(uuid.uuid4(), uuid.uuid4())
 
         assert result["transaction_count"] == 0
         assert result["node_count"] == 0
@@ -295,13 +294,11 @@ class TestGraphBuilderEdgeCases:
             version="1.0.0",
         )
 
-        start_time = datetime(2020, 1, 1, tzinfo=timezone.utc)
-        end_time = datetime(2020, 1, 2, tzinfo=timezone.utc)
+        start_time = timezone.now()
+        end_time = timezone.now()
 
         builder = GraphBuilder()
-        result = builder.build_from_time_range(
-            start_time, end_time, dataset.id
-        )
+        result = builder.build_from_time_range(start_time, end_time, dataset.id)
 
         assert result["transaction_count"] == 0
 
@@ -341,7 +338,7 @@ class TestGraphBuilderEdgeCases:
                 packet_count=100,
                 bandwidth=1000.0,
                 latency=100.5,
-                timestamp=datetime.now(timezone.utc),
+                timestamp=timezone.now(),
             )
 
         builder = GraphBuilder()
@@ -386,7 +383,7 @@ class TestGraphBuilderEdgeCases:
                 packet_count=100,
                 bandwidth=1000.0,
                 latency=100.5,
-                timestamp=datetime.now(timezone.utc),
+                timestamp=timezone.now(),
             )
 
         builder = GraphBuilder()
@@ -433,7 +430,7 @@ class TestGraphBuilderEdgeCases:
                 packet_count=100,
                 bandwidth=1000.0,
                 latency=100.5,
-                timestamp=datetime.now(timezone.utc),
+                timestamp=timezone.now(),
             )
 
         # Build graph twice
@@ -483,7 +480,7 @@ class TestGraphBuilderEdgeCases:
             packet_count=100,
             bandwidth=0.0,  # Valid value
             latency=0.0,
-            timestamp=datetime.now(timezone.utc),
+            timestamp=timezone.now(),
         )
 
         builder = GraphBuilder()
