@@ -3,6 +3,7 @@ Context Processors for Common Application.
 
 These context processors add common data to template contexts.
 """
+
 from django.conf import settings
 
 

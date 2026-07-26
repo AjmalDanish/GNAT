@@ -11,11 +11,9 @@ Usage:
     export DJANGO_SETTINGS_MODULE=config.settings.development
     python manage.py runserver
 """
-from typing import Any
 
-# Default to development if not specified
-import os
 import sys
+from pathlib import Path
 
 # This allows Django to find settings via python path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))

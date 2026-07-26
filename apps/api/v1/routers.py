@@ -10,7 +10,8 @@ Architecture:
 
 Status: Placeholder routers, will be implemented in Phase 13
 """
-from django.urls import path, include
+
+from django.urls import include, path
 from rest_framework import routers
 from rest_framework.routers import DefaultRouter
 
@@ -29,10 +30,8 @@ router: DefaultRouter = routers.DefaultRouter()
 urlpatterns: list = [
     # Include the router URLs
     path("", include(router.urls)),
-    
     # Additional manual patterns if needed
     # path("health/", views.HealthCheckAPIView.as_view(), name="health_check"),
-    
     # Auth endpoints (if using JWT)
     # path("auth/token/", views.TokenObtainPairView.as_view(), name="token_obtain_pair"),
     # path("auth/token/refresh/", views.TokenRefreshView.as_view(), name="token_refresh"),

@@ -34,14 +34,16 @@ Monitoring:
     celery -A config.celery flower \
         --port=5555
 """
+
 import os
+from typing import Any
+
 from celery import Celery
 from celery.schedules import crontab
 from django.conf import settings
-from typing import Any
 
 # Set the default Django settings module
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.production')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.production")
 
 # ============================================================================
 # Celery Application Initialization
@@ -68,28 +70,23 @@ app.conf.update(
     result_serializer="json",
     timezone=settings.TIME_ZONE,
     enable_utc=True,
-    
     # Result backend
     result_backend=settings.CELERY_RESULT_BACKEND,
     result_expires=3600,  # 1 hour
-    
     # Task execution
     task_always_eager=settings.CELERY_TASK_ALWAYS_EAGER,
     task_eager_propagates=settings.CELERY_TASK_EAGER_PROPAGATES,
     task_acks_late=settings.CELERY_TASK_ACKS_LATE,
     worker_prefetch_multiplier=settings.CELERY_WORKER_PREFETCH_MULTIPLIER,
     broker_connection_retry_on_startup=settings.CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP,
-    
     # Task tracking
     task_track_started=True,
     task_time_limit=settings.CELERY_TASK_TIME_LIMIT,
     task_soft_time_limit=settings.CELERY_TASK_SOFT_TIME_LIMIT,
-    
     # Worker settings
     worker_max_tasks_per_child=1000,
     worker_disable_rate_limits=True,
     worker_proc_alive_timeout=60,
-    
     # Optimization
     broker_connection_retry=True,
     broker_connection_max_retries=5,
@@ -105,22 +102,16 @@ app.conf.update(
 app.conf.task_routes = {
     # AI/ML tasks - high priority, dedicated queue
     "apps.ai_engine.tasks.*": {"queue": "ai_tasks", "priority": 9},
-    
     # Graph processing tasks - high priority, dedicated queue
     "apps.graph_engine.tasks.*": {"queue": "graph_tasks", "priority": 8},
-    
     # Report generation tasks - medium priority
     "apps.reports.tasks.*": {"queue": "reports", "priority": 5},
-    
     # Email notification tasks - low priority
     "apps.notifications.tasks.*": {"queue": "notifications", "priority": 3},
-    
     # Analytics tasks - medium priority
     "apps.analytics.tasks.*": {"queue": "analytics", "priority": 6},
-    
     # Data processing tasks - medium priority
     "apps.common.tasks.*": {"queue": "data", "priority": 4},
-    
     # Default queue
     "celery.*": {"queue": "default", "priority": 1},
 }
@@ -146,23 +137,19 @@ app.conf.beat_schedule = {
         "task": "apps.common.tasks.cleanup_old_logs",
         "schedule": crontab(hour=2, minute=0),  # 2 AM daily
     },
-    
     "cleanup-expired-sessions": {
         "task": "apps.common.tasks.cleanup_expired_sessions",
         "schedule": crontab(hour=3, minute=0),  # 3 AM daily
     },
-    
     "generate-daily-report": {
         "task": "apps.analytics.tasks.generate_daily_report",
         "schedule": crontab(hour=6, minute=0),  # 6 AM daily
     },
-    
     # Hourly tasks
     "check-system-health": {
         "task": "apps.common.tasks.check_system_health",
         "schedule": crontab(minute=0),  # Every hour
     },
-    
     "monitor-celery-workers": {
         "task": "apps.common.tasks.monitor_celery_workers",
         "schedule": crontab(minute=30),  # Every 30 minutes
@@ -195,11 +182,9 @@ app.conf.update(
     # Worker optimization
     worker_send_task_events=True,
     task_send_sent_event=True,
-    
     # Task execution limits
     task_max_retries=3,
     task_default_retry_delay=60,  # seconds
-    
     # Task compression
     task_compression="gzip",
     task_compression_threshold=1024,  # bytes
@@ -210,22 +195,25 @@ app.conf.update(
 # Signals (Task Lifecycle Events)
 # ============================================================================
 
+import logging
+
 from celery.signals import (
-    task_prerun,
-    task_postrun,
     task_failure,
-    task_success,
+    task_postrun,
+    task_prerun,
     task_revoked,
+    task_success,
     worker_ready,
     worker_shutdown,
 )
-import logging
 
 logger = logging.getLogger(__name__)
 
 
 @task_prerun.connect
-def task_prerun_handler(sender: Any = None, task_id: str = None, task: Any = None, **kwargs: Any) -> None:
+def task_prerun_handler(
+    sender: Any = None, task_id: str = None, task: Any = None, **kwargs: Any
+) -> None:
     """
     Handle task pre-run signal.
 
@@ -246,7 +234,7 @@ def task_postrun_handler(
     task: Any = None,
     retval: Any = None,
     state: str = None,
-    **kwargs: Any
+    **kwargs: Any,
 ) -> None:
     """
     Handle task post-run signal.
@@ -264,7 +252,9 @@ def task_postrun_handler(
 
 
 @task_failure.connect
-def task_failure_handler(sender: Any = None, task_id: str = None, exception: Any = None, **kwargs: Any) -> None:
+def task_failure_handler(
+    sender: Any = None, task_id: str = None, exception: Any = None, **kwargs: Any
+) -> None:
     """
     Handle task failure signal.
 
@@ -337,6 +327,7 @@ def worker_shutdown_handler(sender: Any = None, **kwargs: Any) -> None:
 # ============================================================================
 
 from functools import wraps
+
 from celery.exceptions import Retry
 
 
@@ -350,6 +341,7 @@ def task_with_logging(task_func: Any) -> Any:
     Returns:
         The decorated task function.
     """
+
     @wraps(task_func)
     def wrapper(*args: Any, **kwargs: Any) -> Any:
         logger.info(f"Starting task: {task_func.__name__}")
@@ -360,7 +352,7 @@ def task_with_logging(task_func: Any) -> Any:
         except Exception as e:
             logger.error(f"Task {task_func.__name__} failed: {e}")
             raise
-    
+
     return wrapper
 
 
@@ -375,6 +367,7 @@ def task_with_retry(max_retries: int = 3, countdown: int = 60) -> Any:
     Returns:
         The decorator function.
     """
+
     def decorator(task_func: Any) -> Any:
         @wraps(task_func)
         def wrapper(self: Any, *args: Any, **kwargs: Any) -> Any:
@@ -383,15 +376,16 @@ def task_with_retry(max_retries: int = 3, countdown: int = 60) -> Any:
             except Exception as exc:
                 logger.warning(f"Task {task_func.__name__} failed, retrying...")
                 raise self.retry(exc=exc, max_retries=max_retries, countdown=countdown)
-        
+
         return wrapper
-    
+
     return decorator
 
 
 # ============================================================================
 # Debug Task
 # ============================================================================
+
 
 @app.task(bind=True)
 def debug_task(self: Any) -> str:
@@ -412,6 +406,7 @@ def debug_task(self: Any) -> str:
 # Health Check Task
 # ============================================================================
 
+
 @app.task(bind=True, name="config.celery.health_check")
 def health_check_task(self: Any) -> dict[str, Any]:
     """
@@ -424,7 +419,7 @@ def health_check_task(self: Any) -> dict[str, Any]:
         Health check status.
     """
     from datetime import datetime
-    
+
     return {
         "status": "healthy",
         "timestamp": datetime.utcnow().isoformat(),

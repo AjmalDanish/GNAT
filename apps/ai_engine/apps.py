@@ -17,6 +17,7 @@ Architecture:
 
 Status: Phase 1 - App structure created, business logic in Phases 5, 6, 7, 11
 """
+
 from django.apps import AppConfig
 from django.utils.translation import gettext_lazy as _
 
@@ -25,10 +26,11 @@ class AiEngineConfig(AppConfig):
     """
     Configuration class for the ai_engine application.
     """
+
     default_auto_field = "django.db.models.BigAutoField"
     name = "apps.ai_engine"
     verbose_name = _("AI Engine")
-    
+
     def ready(self) -> None:
         """
         Initialize the application when Django starts.
