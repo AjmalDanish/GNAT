@@ -81,6 +81,8 @@ class TestGraphBuilder:
         )
 
         # Create normal transaction
+        from django.utils import timezone
+
         Transaction.objects.create(
             dataset=dataset,
             source_city=city1,
@@ -89,6 +91,7 @@ class TestGraphBuilder:
             packet_count=100,
             bandwidth=1000.0,
             latency=100.5,
+            timestamp=timezone.now(),
         )
 
         # Create anomalous transaction
@@ -100,6 +103,7 @@ class TestGraphBuilder:
             packet_count=100,
             bandwidth=1000.0,
             latency=100.5,
+            timestamp=timezone.now(),
             is_anomaly=True,
         )
 
@@ -143,6 +147,8 @@ class TestGraphBuilder:
         )
 
         # Create 50 transactions
+        from django.utils import timezone
+
         for i in range(50):
             Transaction.objects.create(
                 dataset=dataset,
@@ -152,6 +158,7 @@ class TestGraphBuilder:
                 packet_count=100 + i,
                 bandwidth=1000.0,
                 latency=100.5,
+                timestamp=timezone.now(),
             )
 
         builder = GraphBuilder()
@@ -190,6 +197,7 @@ class TestGraphBuilder:
             packet_count=100,
             bandwidth=1000.0,
             latency=100.5,
+            timestamp=timezone.now(),
         )
 
         builder = GraphBuilder()
@@ -227,6 +235,8 @@ class TestGraphBuilder:
         )
 
         # Create multiple transactions between same cities
+        from django.utils import timezone
+
         Transaction.objects.create(
             dataset=dataset,
             source_city=city1,
@@ -235,6 +245,7 @@ class TestGraphBuilder:
             packet_count=100,
             bandwidth=1000.0,
             latency=100.0,
+            timestamp=timezone.now(),
         )
         Transaction.objects.create(
             dataset=dataset,
@@ -244,6 +255,7 @@ class TestGraphBuilder:
             packet_count=200,
             bandwidth=500.0,
             latency=200.0,
+            timestamp=timezone.now(),
         )
 
         builder = GraphBuilder()

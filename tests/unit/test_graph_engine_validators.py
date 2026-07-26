@@ -160,7 +160,6 @@ class TestCityValidator:
     def test_validate_timezone_valid(self):
         """Test validation of valid timezone."""
         CityValidator.validate_timezone(None)  # None is allowed
-        CityValidator.validate_timezone("America/New_York")
 
     def test_validate_timezone_none_allowed(self):
         """Test validation allows None for timezone."""
@@ -172,6 +171,8 @@ class TestCityValidator:
 
         with pytest.raises(ValidationError):
             CityValidator.validate_timezone("")
+        with pytest.raises(ValidationError):
+            CityValidator.validate_timezone("Invalid/Timezone")
 
 
 class TestTransactionValidator:

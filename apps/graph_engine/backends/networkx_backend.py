@@ -34,7 +34,7 @@ class NetworkXBackend(GraphBackend):
         **attributes: Any,
     ) -> None:
         """Add a node to the graph."""
-        attrs = {}
+        attrs: dict[str, Any] = {}
         if country is not None:
             attrs["country"] = country
         if city is not None:
@@ -56,7 +56,7 @@ class NetworkXBackend(GraphBackend):
         **attributes: Any,
     ) -> None:
         """Add a directed edge to the graph."""
-        attrs = {}
+        attrs: dict[str, Any] = {}
         if bandwidth is not None:
             attrs["bandwidth"] = bandwidth
         if latency is not None:
@@ -151,7 +151,7 @@ class NetworkXBackend(GraphBackend):
                 {
                     "source": source,
                     "target": target,
-                    **self.get_edge_attributes(source, target),
+                    **(self.get_edge_attributes(source, target) or {}),
                 }
                 for source, target in self.get_edges()
             ],
