@@ -9,6 +9,7 @@ It extends base.py with testing-optimized settings such as:
 - Simplified email backend
 - Faster password hashing
 """
+
 from .base import *  # noqa: F401, F403
 
 # ============================================================================
@@ -111,14 +112,16 @@ STATIC_ROOT = "/tmp/test_static/"
 # REST Framework (Testing)
 # ============================================================================
 
-REST_FRAMEWORK.update({
-    # Disable throttling in tests
-    "DEFAULT_THROTTLE_CLASSES": [],
-    "DEFAULT_THROTTLE_RATES": {},
-    # Use simple pagination
-    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
-    "PAGE_SIZE": 10,
-})
+REST_FRAMEWORK.update(
+    {
+        # Disable throttling in tests
+        "DEFAULT_THROTTLE_CLASSES": [],
+        "DEFAULT_THROTTLE_RATES": {},
+        # Use simple pagination
+        "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+        "PAGE_SIZE": 10,
+    }
+)
 
 
 # ============================================================================
@@ -231,6 +234,7 @@ LANGUAGE_CODE = "en-us"
 # Additional Settings
 # ============================================================================
 
+
 # Disable migrations for faster tests
 class DisableMigrations:
     """
@@ -239,11 +243,13 @@ class DisableMigrations:
     Usage:
         TEST_RUNNER = "config.settings.testing.DisableMigrations"
     """
+
     def __contains__(self, item: str) -> bool:
         return True
 
     def __getitem__(self, item: str) -> list:
         return None
+
 
 # Uncomment to disable all migrations (uncomment for faster tests)
 # MIGRATION_MODULES = DisableMigrations()

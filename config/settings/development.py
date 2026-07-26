@@ -9,6 +9,7 @@ It extends base.py with development-friendly settings such as:
 - Relaxed security settings
 - Console logging
 """
+
 from .base import *  # noqa: F401, F403
 
 # ============================================================================
@@ -29,9 +30,11 @@ ALLOWED_HOSTS = [
 # Django Debug Toolbar
 # ============================================================================
 
-INSTALLED_APPS.extend([
-    "debug_toolbar",
-])
+INSTALLED_APPS.extend(
+    [
+        "debug_toolbar",
+    ]
+)
 
 MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")
 
@@ -67,6 +70,21 @@ LOGGING["handlers"]["console"]["level"] = "DEBUG"
 # ============================================================================
 # Database (Development)
 # ============================================================================
+
+# Use SQLite for development
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+        "ATOMIC_REQUESTS": True,
+        "OPTIONS": {
+            "timeout": 20,
+        },
+    }
+}
+
+# Enable timezone support for SQLite
+USE_TZ = True
 
 # Display SQL queries in console
 if SHOW_SQL_QUERIES:
@@ -130,18 +148,20 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 # REST Framework (Development)
 # ============================================================================
 
-REST_FRAMEWORK.update({
-    # Allow browsing API in browser
-    "DEFAULT_RENDERER_CLASSES": [
-        "rest_framework.renderers.BrowsableAPIRenderer",
-        "rest_framework.renderers.JSONRenderer",
-    ],
-    # Disable throttling in development
-    "DEFAULT_THROTTLE_CLASSES": [],
-    "DEFAULT_THROTTLE_RATES": {},
-    # More detailed error responses
-    "DEFAULT_EXCEPTION_HANDLER": "rest_framework.views.exception_handler",
-})
+REST_FRAMEWORK.update(
+    {
+        # Allow browsing API in browser
+        "DEFAULT_RENDERER_CLASSES": [
+            "rest_framework.renderers.BrowsableAPIRenderer",
+            "rest_framework.renderers.JSONRenderer",
+        ],
+        # Disable throttling in development
+        "DEFAULT_THROTTLE_CLASSES": [],
+        "DEFAULT_THROTTLE_RATES": {},
+        # More detailed error responses
+        "DEFAULT_EXCEPTION_HANDLER": "rest_framework.views.exception_handler",
+    }
+)
 
 
 # ============================================================================

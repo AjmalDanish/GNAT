@@ -16,6 +16,7 @@ Architecture:
 
 Status: Phase 1 - App structure created, business logic in Phase 17
 """
+
 from django.apps import AppConfig
 from django.utils.translation import gettext_lazy as _
 
@@ -24,10 +25,11 @@ class AnalyticsConfig(AppConfig):
     """
     Configuration class for the analytics application.
     """
+
     default_auto_field = "django.db.models.BigAutoField"
     name = "apps.analytics"
     verbose_name = _("Analytics")
-    
+
     def ready(self) -> None:
         """
         Initialize the application when Django starts.

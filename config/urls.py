@@ -17,17 +17,20 @@ URL Pattern Organization:
 - Reports: /reports/
 - Notifications: /notifications/
 """
+
+from pathlib import Path
+from typing import Any
+
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
+from django.views.defaults import page_not_found, permission_denied, server_error
 from django.views.generic import TemplateView
-from django.views.defaults import page_not_found, server_error, permission_denied
 from rest_framework import permissions
+
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
-from pathlib import Path
-from typing import Any
 
 # ============================================================================
 # Schema View (Swagger/OpenAPI)
@@ -57,6 +60,7 @@ schema_view = get_schema_view(
 # ============================================================================
 # Error Handlers
 # ============================================================================
+
 
 def custom_404_handler(request: Any, exception: Any) -> Any:
     """
@@ -110,10 +114,8 @@ urlpatterns: list[Any] = [
         TemplateView.as_view(template_name="health.html"),
         name="health_check",
     ),
-    
     # Admin
     path(settings.ADMIN_URL, admin.site.urls),
-    
     # API Documentation (Swagger/OpenAPI)
     path(
         "swagger/",
@@ -130,10 +132,8 @@ urlpatterns: list[Any] = [
         schema_view.without_ui(cache_timeout=0),
         name="schema-json",
     ),
-    
     # API v1
     path("api/v1/", include("apps.api.v1.routers")),
-    
     # App-specific URLs (will be implemented in Phase 2+)
     path("", include("apps.dashboard.urls", namespace="dashboard")),
     path("accounts/", include("apps.accounts.urls", namespace="accounts")),
@@ -149,7 +149,6 @@ urlpatterns: list[Any] = [
         "notifications/",
         include("apps.notifications.urls", namespace="notifications"),
     ),
-    
     # Common utilities
     path("common/", include("apps.common.urls", namespace="common")),
 ]
@@ -172,19 +171,19 @@ if settings.DEBUG:
         settings.STATIC_URL,
         document_root=settings.STATIC_ROOT,
     )
-    
+
     # Serve media files in development
     urlpatterns += static(
         settings.MEDIA_URL,
         document_root=settings.MEDIA_ROOT,
     )
-    
+
     # Add Django Debug Toolbar URLs (if enabled)
     if "debug_toolbar" in settings.INSTALLED_APPS:
         import debug_toolbar
-        
+
         urlpatterns.insert(0, path("__debug__/", include(debug_toolbar.urls)))
-    
+
     # Add Django Silk URLs (if enabled)
     if "silk" in settings.INSTALLED_APPS:
         urlpatterns.insert(0, path("silk/", include("silk.urls", namespace="silk")))
