@@ -234,7 +234,6 @@ class TestGraphMetricsEdgeCases:
         metrics = GraphMetrics(backend)
 
         try:
-            summary = metrics.get_node_summary("nonexistent")
             assert False, "Should raise KeyError"
         except KeyError:
             # Expected behavior

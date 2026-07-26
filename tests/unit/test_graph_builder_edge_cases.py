@@ -168,10 +168,6 @@ class TestGraphBuilderEdgeCases:
             city_name="Los Angeles",
             latitude=34.0522,
             longitude=-118.2437,
-        )
-        city3 = City.objects.create(
-            country=country,
-            city_name="Chicago",
             latitude=41.8781,
             longitude=-87.6298,
         )
