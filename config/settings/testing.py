@@ -30,6 +30,9 @@ DATABASES = {
     }
 }
 
+# Enable timezone support for SQLite
+USE_TZ = True
+
 
 # ============================================================================
 # Password Hashing (Faster for Tests)
