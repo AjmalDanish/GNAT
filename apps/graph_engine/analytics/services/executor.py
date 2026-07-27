@@ -12,12 +12,13 @@ Architecture:
 
 from __future__ import annotations
 
-import signal
+import sys
 import time
 from dataclasses import dataclass, replace
 from datetime import datetime, timedelta
 from typing import Any, Dict, Optional, Type
 from uuid import UUID
+import signal
 
 from ...interfaces.graph_backend import GraphBackend
 from ..exceptions import (
@@ -302,24 +303,31 @@ class AlgorithmExecutor:
 
         # Execute with timeout if specified
         if timeout_seconds is not None:
+            # Unix-only: Use signal-based timeout for better precision
+            # Windows does not support SIGALRM (Application Control policy limitation)
+            if sys.platform != 'win32':
 
-            def timeout_handler(signum: int, frame: Any) -> None:
-                raise AlgorithmTimeoutError(
-                    f"Algorithm '{algorithm.name}' exceeded timeout of {timeout_seconds} seconds",
-                    algorithm_name=algorithm.name,
-                    timeout_seconds=timeout_seconds,
-                )
+                def timeout_handler(signum: int, frame: Any) -> None:
+                    raise AlgorithmTimeoutError(
+                        f"Algorithm '{algorithm.name}' exceeded timeout of {timeout_seconds} seconds",
+                        algorithm_name=algorithm.name,
+                        timeout_seconds=timeout_seconds,
+                    )
 
-            # Set signal handler
-            original_handler = signal.signal(signal.SIGALRM, timeout_handler)
-            signal.alarm(timeout_seconds)
+                # Set signal handler
+                original_handler = signal.signal(signal.SIGALRM, timeout_handler)
+                signal.alarm(timeout_seconds)
 
-            try:
+                try:
+                    result = self._execute_algorithm(algorithm, config)
+                finally:
+                    # Reset signal handler
+                    signal.alarm(0)
+                    signal.signal(signal.SIGALRM, original_handler)
+            else:
+                # Windows: Timeout not supported, execute without timeout
+                # Signal.SIGALRM is not available on Windows platform
                 result = self._execute_algorithm(algorithm, config)
-            finally:
-                # Reset signal handler
-                signal.alarm(0)
-                signal.signal(signal.SIGALRM, original_handler)
         else:
             result = self._execute_algorithm(algorithm, config)
 
