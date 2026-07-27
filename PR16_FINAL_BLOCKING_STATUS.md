@@ -144,7 +144,7 @@ if timeout_seconds is not None:
 | Repository Coverage | ✅ PASS | 96.45% ≥ 95% |
 | Registry Coverage | ✅ PASS | 97.03% ≥ 95% |
 | Executor Coverage | ⚠️ 94.92% | 8 Unix-only statements uncovered |
-| Overall Analytics | ✅ PASS | ~96.11% ≥ 90% |
+| Overall Analytics | ✅ PASS | 96.15% ≥ 90% |
 | Ruff | ✅ PASS | All checks passed |
 | Black | ✅ PASS | All files formatted |
 | Isort | ✅ PASS | Imports correctly sorted |

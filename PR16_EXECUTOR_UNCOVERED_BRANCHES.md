@@ -228,7 +228,7 @@ Actually, let me just use the reported numbers and classify properly. The direct
 - Executor: 93.91% ❌ (≥95% target - platform-specific code)
 
 ### Overall Analytics Coverage
-- Core Analytics: ~96.11% ✅ (≥90% target)
+Core Analytics Coverage: 96.15% (target ≥90%)
 
 ### Platform-Specific Justification
 - Lines 307-323 use `signal.SIGALRM` which is Unix-only

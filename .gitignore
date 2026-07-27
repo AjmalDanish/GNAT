@@ -184,3 +184,6 @@ static/CACHE/
 *.bak
 *.backup
 backups/
+# PR #16 Review Artifacts (temporary)
+PR16_STATUS_REPORT.md
+coverage.json

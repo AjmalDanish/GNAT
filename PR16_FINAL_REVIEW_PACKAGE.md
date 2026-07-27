@@ -108,7 +108,7 @@ Modified files:
 | Repository Coverage | ≥95% | 96.45% | ✅ PASS |
 | Registry Coverage | ≥95% | 97.03% | ✅ PASS |
 | Executor Coverage | ≥95% | 93.07% | ⚠️ Platform-Specific Exception |
-| Overall Analytics Coverage | ≥90% | ~96.11% | ✅ PASS |
+| Overall Analytics Coverage | ≥90% | 96.15% | ✅ PASS |
 
 ### Platform-Specific Coverage Exception
 

@@ -196,7 +196,7 @@ self._graph_cache_keys[config.graph_id].add(cache_key)  # Line 441
 | Repository | 96.45% | ≥95% | ✅ PASS |
 | Registry | 97.03% | ≥95% | ✅ PASS |
 | Executor | 95.48% | ≥95% | ✅ PASS |
-| Overall Analytics | ~96.11% | ≥90% | ✅ PASS |
+| Overall Analytics | 96.15% | ≥90% | ✅ PASS |
 
 ### Platform-Specific Justification
 - Lines 307-323 use `signal.SIGALRM` which is Unix-only
@@ -224,7 +224,7 @@ self._graph_cache_keys[config.graph_id].add(cache_key)  # Line 441
 - ✅ Repository ≥95% (96.45%)
 - ✅ Registry ≥95% (97.03%)
 - ✅ Executor ≥95% (95.48%)
-- ✅ Overall Analytics ≥90% (~96.11%)
+- ✅ Overall Analytics ≥90% (96.15%)
 
 ---
 
