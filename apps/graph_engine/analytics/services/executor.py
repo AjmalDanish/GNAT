@@ -12,13 +12,13 @@ Architecture:
 
 from __future__ import annotations
 
+import signal
 import sys
 import time
 from dataclasses import dataclass, replace
 from datetime import datetime, timedelta
 from typing import Any, Dict, Optional, Type
 from uuid import UUID
-import signal
 
 from ...interfaces.graph_backend import GraphBackend
 from ..exceptions import (
@@ -304,8 +304,10 @@ class AlgorithmExecutor:
         # Execute with timeout if specified
         if timeout_seconds is not None:
             # Unix-only: Use signal-based timeout for better precision
-            # Windows does not support SIGALRM (Application Control policy limitation)
-            if sys.platform != 'win32':
+            # Windows does not support SIGALRM.
+            # This branch executes only on Unix-like systems (Linux, macOS).
+            # See PLATFORM_LIMITATIONS.md for details.
+            if sys.platform != "win32":
 
                 def timeout_handler(signum: int, frame: Any) -> None:
                     raise AlgorithmTimeoutError(
@@ -325,8 +327,9 @@ class AlgorithmExecutor:
                     signal.alarm(0)
                     signal.signal(signal.SIGALRM, original_handler)
             else:
-                # Windows: Timeout not supported, execute without timeout
-                # Signal.SIGALRM is not available on Windows platform
+                # Windows: Execute without timeout (SIGALRM unavailable)
+                # Timeout parameter is ignored on Windows platform.
+                # Future: Implement cross-platform timeout using concurrent.futures
                 result = self._execute_algorithm(algorithm, config)
         else:
             result = self._execute_algorithm(algorithm, config)
