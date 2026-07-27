@@ -46,8 +46,8 @@ redis>=5.0.0,<6.0.0
 # ----------------------------------------------------------------------------
 torch>=2.1.0,<3.0.0
 torch-geometric>=2.4.0,<3.0.0
-torch-scatter>=2.1.0,<3.0.0
-torch-sparse>=0.6.0,<1.0.0
+# Note: torch-scatter and torch-sparse are dependencies of torch-geometric
+# and will be installed automatically. We don't need to specify them separately.
 networkx>=3.2.0,<4.0.0
 numpy>=1.26.0,<2.0.0
 pandas>=2.1.0,<3.0.0
