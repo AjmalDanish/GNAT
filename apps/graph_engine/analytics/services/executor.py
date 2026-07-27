@@ -12,22 +12,18 @@ Architecture:
 
 from __future__ import annotations
 
-from dataclasses import dataclass, replace
-from datetime import datetime, timedelta
-from typing import Any, Callable, Dict, List, Optional, Type
-from uuid import UUID, uuid4
-
 import signal
 import time
+from dataclasses import dataclass, replace
+from datetime import datetime, timedelta
+from typing import Any, Dict, Optional, Type
+from uuid import UUID
 
 from ...interfaces.graph_backend import GraphBackend
 from ..exceptions import (
     AlgorithmExecutionError,
     AlgorithmTimeoutError,
-    CacheError,
     InvalidConfigError,
-    InvalidGraphError,
-    AlgorithmNotFoundError,
 )
 from ..interfaces import (
     AlgorithmConfig,
