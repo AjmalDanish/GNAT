@@ -71,6 +71,8 @@ class TestAlgorithmRegistry:
     def test_register_algorithm(self):
         """Test registering an algorithm."""
         test_registry = AlgorithmRegistry()
+        test_registry.clear()
+        test_registry.clear()
 
         test_registry.register(MockAlgorithm)
 
@@ -79,6 +81,8 @@ class TestAlgorithmRegistry:
     def test_register_algorithm_with_custom_name(self):
         """Test registering algorithm with custom name."""
         test_registry = AlgorithmRegistry()
+        test_registry.clear()
+        test_registry.clear()
 
         test_registry.register(MockAlgorithm, name="custom_name")
 
@@ -88,6 +92,7 @@ class TestAlgorithmRegistry:
     def test_register_duplicate_fails(self):
         """Test that registering duplicate algorithm raises error."""
         test_registry = AlgorithmRegistry()
+        test_registry.clear()
         test_registry.register(MockAlgorithm)
 
         with pytest.raises(ValueError, match="already registered"):
@@ -96,6 +101,7 @@ class TestAlgorithmRegistry:
     def test_register_algorithm_without_name_fails(self):
         """Test that registering algorithm without name attribute fails."""
         test_registry = AlgorithmRegistry()
+        test_registry.clear()
 
         class InvalidAlgorithm:
             """Invalid algorithm without name attribute."""
@@ -108,6 +114,7 @@ class TestAlgorithmRegistry:
     def test_register_algorithm_without_category_fails(self):
         """Test that registering algorithm without category attribute fails."""
         test_registry = AlgorithmRegistry()
+        test_registry.clear()
 
         class InvalidAlgorithm:
             """Invalid algorithm without category attribute."""
@@ -120,6 +127,7 @@ class TestAlgorithmRegistry:
     def test_get_algorithm(self):
         """Test getting algorithm by name."""
         test_registry = AlgorithmRegistry()
+        test_registry.clear()
         test_registry.register(MockAlgorithm)
 
         algorithm_class = test_registry.get("mock_algorithm")
@@ -129,6 +137,7 @@ class TestAlgorithmRegistry:
     def test_get_nonexistent_algorithm_fails(self):
         """Test that getting nonexistent algorithm raises error."""
         test_registry = AlgorithmRegistry()
+        test_registry.clear()
 
         with pytest.raises(KeyError, match="not found"):
             test_registry.get("nonexistent")
@@ -136,6 +145,7 @@ class TestAlgorithmRegistry:
     def test_get_by_category(self):
         """Test getting algorithms by category."""
         test_registry = AlgorithmRegistry()
+        test_registry.clear()
         test_registry.register(MockAlgorithm)
 
         algorithms = test_registry.get_by_category("centrality")
@@ -146,6 +156,7 @@ class TestAlgorithmRegistry:
     def test_get_by_category_empty(self):
         """Test getting algorithms for non-existent category."""
         test_registry = AlgorithmRegistry()
+        test_registry.clear()
 
         algorithms = test_registry.get_by_category("nonexistent")
 
@@ -154,6 +165,7 @@ class TestAlgorithmRegistry:
     def test_list_algorithms(self):
         """Test listing all algorithms."""
         test_registry = AlgorithmRegistry()
+        test_registry.clear()
         test_registry.register(MockAlgorithm)
 
         algorithms = test_registry.list_algorithms()
@@ -163,6 +175,7 @@ class TestAlgorithmRegistry:
     def test_list_algorithms_with_category_filter(self):
         """Test listing algorithms with category filter."""
         test_registry = AlgorithmRegistry()
+        test_registry.clear()
         test_registry.register(MockAlgorithm)
 
         algorithms = test_registry.list_algorithms(category="centrality")
@@ -175,6 +188,7 @@ class TestAlgorithmRegistry:
     def test_list_categories(self):
         """Test listing all categories."""
         test_registry = AlgorithmRegistry()
+        test_registry.clear()
         test_registry.register(MockAlgorithm)
 
         categories = test_registry.list_categories()
@@ -184,6 +198,7 @@ class TestAlgorithmRegistry:
     def test_is_registered(self):
         """Test checking if algorithm is registered."""
         test_registry = AlgorithmRegistry()
+        test_registry.clear()
 
         assert not test_registry.is_registered("mock_algorithm")
 
@@ -194,6 +209,7 @@ class TestAlgorithmRegistry:
     def test_unregister(self):
         """Test unregistering an algorithm."""
         test_registry = AlgorithmRegistry()
+        test_registry.clear()
         test_registry.register(MockAlgorithm)
 
         test_registry.unregister("mock_algorithm")
@@ -203,6 +219,7 @@ class TestAlgorithmRegistry:
     def test_unregister_nonexistent_fails(self):
         """Test that unregistering nonexistent algorithm raises error."""
         test_registry = AlgorithmRegistry()
+        test_registry.clear()
 
         with pytest.raises(KeyError, match="not found"):
             test_registry.unregister("nonexistent")
@@ -210,6 +227,7 @@ class TestAlgorithmRegistry:
     def test_unregister_removes_from_category(self):
         """Test that unregistering removes from category index."""
         test_registry = AlgorithmRegistry()
+        test_registry.clear()
         test_registry.register(MockAlgorithm)
 
         test_registry.unregister("mock_algorithm")
@@ -220,6 +238,7 @@ class TestAlgorithmRegistry:
     def test_clear(self):
         """Test clearing all algorithms."""
         test_registry = AlgorithmRegistry()
+        test_registry.clear()
         test_registry.register(MockAlgorithm)
 
         test_registry.clear()
@@ -231,6 +250,7 @@ class TestAlgorithmRegistry:
     def test_get_metadata(self):
         """Test getting algorithm metadata."""
         test_registry = AlgorithmRegistry()
+        test_registry.clear()
         test_registry.register(MockAlgorithm)
 
         metadata = test_registry.get_metadata("mock_algorithm")
@@ -246,6 +266,7 @@ class TestAlgorithmRegistry:
     def test_get_metadata_nonexistent_fails(self):
         """Test that getting metadata for nonexistent algorithm raises error."""
         test_registry = AlgorithmRegistry()
+        test_registry.clear()
 
         with pytest.raises(KeyError, match="not found"):
             test_registry.get_metadata("nonexistent")
@@ -253,6 +274,7 @@ class TestAlgorithmRegistry:
     def test_get_statistics(self):
         """Test getting registry statistics."""
         test_registry = AlgorithmRegistry()
+        test_registry.clear()
         test_registry.register(MockAlgorithm)
 
         stats = test_registry.get_statistics()
@@ -264,6 +286,7 @@ class TestAlgorithmRegistry:
     def test_register_decorator(self):
         """Test using register decorator."""
         test_registry = AlgorithmRegistry()
+        test_registry.clear()
 
         @test_registry.register_decorator("decorated_algorithm")
         class DecoratedAlgorithm(CentralityAlgorithm):
@@ -314,6 +337,7 @@ class TestGlobalRegistry:
     def test_registry_persists(self):
         """Test that global registry persists across calls."""
         test_registry = AlgorithmRegistry()
+        test_registry.clear()
 
         # Don't use global registry for this test
         reg1 = get_registry()
@@ -330,6 +354,7 @@ class TestRegistryThreadSafety:
         import threading
 
         test_registry = AlgorithmRegistry()
+        test_registry.clear()
 
         def register_algorithm(name: str):
             class TestAlg(CentralityAlgorithm):

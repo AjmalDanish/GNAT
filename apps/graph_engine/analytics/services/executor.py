@@ -13,24 +13,28 @@ Architecture:
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Any, Callable, Dict, List, Optional, Type
 from uuid import UUID, uuid4
 
-from ..interfaces.graph_backend import GraphBackend
-from .exceptions import (
+import signal
+import time
+
+from ...interfaces.graph_backend import GraphBackend
+from ..exceptions import (
     AlgorithmExecutionError,
     AlgorithmTimeoutError,
     CacheError,
     InvalidConfigError,
     InvalidGraphError,
+    AlgorithmNotFoundError,
 )
-from .interfaces import (
+from ..interfaces import (
     AlgorithmConfig,
     AlgorithmResult,
     AlgorithmStrategy,
 )
-from .registry import AlgorithmRegistry, get_registry
+from ..registry import AlgorithmRegistry, get_registry
 
 
 @dataclass
@@ -111,8 +115,7 @@ class CacheAdapter:
 
         cache_key = self._make_key(key)
         ttl = ttl_seconds or self.config.ttl_seconds
-        expiry = datetime.utcnow()
-        expiry = expiry.replace(second=expiry.second + ttl)
+        expiry = datetime.utcnow() + timedelta(seconds=ttl)
 
         self._cache[cache_key] = (value, expiry)
 
@@ -203,6 +206,8 @@ class AlgorithmExecutor:
         self.backend = backend
         self.cache = cache_adapter or CacheAdapter(CacheConfig(enabled=False))
         self.registry = registry or get_registry()
+        # Track cache keys by graph_id for invalidation
+        self._graph_cache_keys: Dict[UUID, set[str]] = {}
 
     def execute(
         self, algorithm_name: str, config: AlgorithmConfig, timeout_seconds: Optional[int] = None
@@ -268,7 +273,7 @@ class AlgorithmExecutor:
         try:
             return self.registry.get(algorithm_name)
         except KeyError as e:
-            from .exceptions import AlgorithmNotFoundError
+            from ..exceptions import AlgorithmNotFoundError
 
             raise AlgorithmNotFoundError(
                 algorithm_name=algorithm_name,
@@ -296,9 +301,6 @@ class AlgorithmExecutor:
             AlgorithmTimeoutError: If execution times out
             AlgorithmExecutionError: If execution fails
         """
-        import signal
-        import time
-
         # Create algorithm instance
         algorithm = algorithm_class()
 
@@ -436,6 +438,10 @@ class AlgorithmExecutor:
         """
         cache_key = self._make_cache_key(algorithm_name, config)
         self.cache.set(cache_key, result, ttl_seconds)
+        # Track cache key for graph invalidation
+        if config.graph_id not in self._graph_cache_keys:
+            self._graph_cache_keys[config.graph_id] = set()
+        self._graph_cache_keys[config.graph_id].add(cache_key)
 
     def _make_cache_key(self, algorithm_name: str, config: AlgorithmConfig) -> str:
         """
@@ -472,8 +478,10 @@ class AlgorithmExecutor:
         Args:
             graph_id: ID of graph to invalidate
         """
-        pattern = f"*:{str(graph_id)}:*"
-        self.cache.delete_pattern(pattern)
+        if graph_id in self._graph_cache_keys:
+            for cache_key in self._graph_cache_keys[graph_id]:
+                self.cache.delete(cache_key)
+            del self._graph_cache_keys[graph_id]
 
 
 __all__ = [

@@ -17,9 +17,6 @@ from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional, Tuple
 from uuid import UUID, uuid4
 
-from django.db import transaction
-
-from ..models import Dataset
 from .interfaces import AlgorithmResult
 
 # ============================================================================

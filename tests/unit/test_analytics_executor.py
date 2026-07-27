@@ -22,6 +22,7 @@ from apps.graph_engine.analytics.interfaces import (
     CentralityAlgorithm,
 )
 from apps.graph_engine.analytics.registry import get_registry
+from apps.graph_engine.analytics.repositories import get_default_repository
 from apps.graph_engine.analytics.services.executor import (
     AlgorithmExecutor,
     CacheAdapter,
