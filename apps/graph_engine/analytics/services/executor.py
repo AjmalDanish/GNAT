@@ -12,7 +12,7 @@ Architecture:
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import datetime, timedelta
 from typing import Any, Callable, Dict, List, Optional, Type
 from uuid import UUID, uuid4
@@ -243,8 +243,8 @@ class AlgorithmExecutor:
         if config.use_cache:
             cached_result = self._get_from_cache(algorithm_name, config)
             if cached_result is not None:
-                cached_result.cached = True
-                return cached_result
+                # Return a copy with cached=True to avoid mutating cached results
+                return replace(cached_result, cached=True)
 
         # Execute algorithm
         result = self._execute_with_timeout(
