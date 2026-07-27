@@ -200,11 +200,14 @@ class TestConcreteAlgorithmImplementations:
         # Verify attributes
         assert TestCommunity.name == "test_community"
         assert TestCommunity.category == "community"
+        
+        # Test instance methods
+        community = TestCommunity()
         assert (
-            TestCommunity.compute_modularity(None, {"node1": 0}, AlgorithmConfig(graph_id=uuid4()))
+            community.compute_modularity(None, {"node1": 0}, AlgorithmConfig(graph_id=uuid4()))
             == 0.5
         )
-        assert TestCommunity.find_bridge_nodes(
+        assert community.find_bridge_nodes(
             None, {"node1": 0}, AlgorithmConfig(graph_id=uuid4())
         ) == ["node1"]
 
@@ -265,9 +268,12 @@ class TestConcreteAlgorithmImplementations:
         # Verify attributes
         assert TestPath.name == "test_path"
         assert TestPath.category == "path"
-        paths = TestPath.find_k_shortest_paths(None, "A", "B", 2, AlgorithmConfig(graph_id=uuid4()))
+        
+        # Test instance methods
+        path_algo = TestPath()
+        paths = path_algo.find_k_shortest_paths(None, "A", "B", 2, AlgorithmConfig(graph_id=uuid4()))
         assert paths == [["A", "B"]]
-        assert TestPath.compute_diameter(None, AlgorithmConfig(graph_id=uuid4())) == 5
+        assert path_algo.compute_diameter(None, AlgorithmConfig(graph_id=uuid4())) == 5
 
     def test_minimal_anomaly_detector(self):
         """Test minimal anomaly detector implementation."""
@@ -310,8 +316,11 @@ class TestConcreteAlgorithmImplementations:
         # Verify attributes
         assert TestDetector.name == "test_detector"
         assert TestDetector.category == "anomaly_detection"
-        assert TestDetector.get_severity_score({}) == 5
-        assert TestDetector.classify_anomaly({}) == "test_type"
+        
+        # Test instance methods
+        detector = TestDetector()
+        assert detector.get_severity_score({}) == 5
+        assert detector.classify_anomaly({}) == "test_type"
 
     def test_minimal_feature_extractor(self):
         """Test minimal feature extractor implementation."""
@@ -354,11 +363,14 @@ class TestConcreteAlgorithmImplementations:
         # Verify attributes
         assert TestExtractor.name == "test_extractor"
         assert TestExtractor.category == "feature_extraction"
-        features = TestExtractor.extract_node_features(
+        
+        # Test instance methods
+        extractor = TestExtractor()
+        features = extractor.extract_node_features(
             None, "node1", AlgorithmConfig(graph_id=uuid4())
         )
         assert features == {"degree": 5, "betweenness": 0.5}
-        edge_features = TestExtractor.extract_edge_features(
+        edge_features = extractor.extract_edge_features(
             None, "A", "B", AlgorithmConfig(graph_id=uuid4())
         )
         assert edge_features == {"weight": 1.0, "betweenness_contribution": 0.1}
