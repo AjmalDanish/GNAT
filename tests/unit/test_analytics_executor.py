@@ -330,5 +330,3 @@ class TestAlgorithmExecutor:
         # Should get cache miss now
         result = executor.execute("mock_algorithm", config)
         assert result.cached is False
-
-

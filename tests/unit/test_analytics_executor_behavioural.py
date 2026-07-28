@@ -66,7 +66,6 @@ from apps.graph_engine.analytics.services.executor import (
 from apps.graph_engine.backends.networkx_backend import NetworkXBackend
 from apps.graph_engine.analytics.registry import get_registry
 
-
 # ============================================================================
 # Algorithm Implementations for Testing
 # ============================================================================
@@ -276,8 +275,8 @@ class ResultWithoutMetadata(CentralityAlgorithm):
             results={"node1": 0.5},
         )
         # Remove optional attributes to trigger executor's metadata addition
-        delattr(result, 'metadata')
-        delattr(result, 'cached')
+        delattr(result, "metadata")
+        delattr(result, "cached")
         return result
 
     def compute_for_node(self, backend, node_id, config):
@@ -319,7 +318,7 @@ class PartialMetadataAlgorithm(CentralityAlgorithm):
             results={"node1": 0.5},
         )
         # Remove execution_time_ms to trigger executor to add it
-        delattr(result, 'execution_time_ms')
+        delattr(result, "execution_time_ms")
         return result
 
     def compute_for_node(self, backend, node_id, config):
@@ -490,8 +489,8 @@ class TestTimeoutFinallyBlock:
     """Behavioural tests for timeout cleanup."""
 
     @pytest.mark.skipif(
-        not hasattr(signal, 'SIGALRM'),
-        reason="SIGALRM not available on this platform (e.g., Windows)"
+        not hasattr(signal, "SIGALRM"),
+        reason="SIGALRM not available on this platform (e.g., Windows)",
     )
     def test_timeout_cleanup_resets_signal_handler(self):
         """
@@ -522,8 +521,8 @@ class TestTimeoutFinallyBlock:
         assert True
 
     @pytest.mark.skipif(
-        not hasattr(signal, 'SIGALRM'),
-        reason="SIGALRM not available on this platform (e.g., Windows)"
+        not hasattr(signal, "SIGALRM"),
+        reason="SIGALRM not available on this platform (e.g., Windows)",
     )
     def test_timeout_cleanup_on_regular_execution(self):
         """

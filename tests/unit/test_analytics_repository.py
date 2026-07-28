@@ -26,7 +26,6 @@ from apps.graph_engine.analytics.repositories import (
     set_default_repository,
 )
 
-
 # ============================================================================
 # Save Result Tests
 # ============================================================================

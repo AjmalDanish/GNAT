@@ -374,21 +374,21 @@ class TestRegistryThreadSafety:
             # Use type() to create classes with proper scope
             class_name = f"TestAlg{i}"
             class_dict = {
-                'name': f"algo_{i}",
-                'category': "centrality",
-                'version': "1.0.0",
-                'description': f"Test algorithm {i}",
-                'validate_config': classmethod(lambda cls, config: []),
-                'get_required_parameters': classmethod(lambda cls: []),
-                'get_optional_parameters': classmethod(lambda cls: {}),
-                'compute': lambda self, backend, config: AlgorithmResult(
+                "name": f"algo_{i}",
+                "category": "centrality",
+                "version": "1.0.0",
+                "description": f"Test algorithm {i}",
+                "validate_config": classmethod(lambda cls, config: []),
+                "get_required_parameters": classmethod(lambda cls: []),
+                "get_optional_parameters": classmethod(lambda cls: {}),
+                "compute": lambda self, backend, config: AlgorithmResult(
                     algorithm_name=self.name,
                     graph_id=config.graph_id,
                     execution_time_ms=0,
                     results={},
                 ),
-                'compute_for_node': lambda self, backend, node_id, config: 0.5,
-                'get_top_nodes': lambda self, backend, n=10, config=None: [],
+                "compute_for_node": lambda self, backend, node_id, config: 0.5,
+                "get_top_nodes": lambda self, backend, n=10, config=None: [],
             }
             TestAlg = type(class_name, (CentralityAlgorithm,), class_dict)
             algorithm_classes.append(TestAlg)
@@ -420,4 +420,6 @@ class TestRegistryThreadSafety:
         stats = test_registry.get_statistics()
         # Due to thread-safety and potential race conditions, we check
         # that at least one registration succeeded
-        assert stats["total_algorithms"] >= 1, f"Expected at least 1 registration, got {stats['total_algorithms']}. Errors: {errors}"
+        assert (
+            stats["total_algorithms"] >= 1
+        ), f"Expected at least 1 registration, got {stats['total_algorithms']}. Errors: {errors}"

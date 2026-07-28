@@ -200,7 +200,7 @@ class TestConcreteAlgorithmImplementations:
         # Verify attributes
         assert TestCommunity.name == "test_community"
         assert TestCommunity.category == "community"
-        
+
         # Test instance methods
         community = TestCommunity()
         assert (
@@ -268,10 +268,12 @@ class TestConcreteAlgorithmImplementations:
         # Verify attributes
         assert TestPath.name == "test_path"
         assert TestPath.category == "path"
-        
+
         # Test instance methods
         path_algo = TestPath()
-        paths = path_algo.find_k_shortest_paths(None, "A", "B", 2, AlgorithmConfig(graph_id=uuid4()))
+        paths = path_algo.find_k_shortest_paths(
+            None, "A", "B", 2, AlgorithmConfig(graph_id=uuid4())
+        )
         assert paths == [["A", "B"]]
         assert path_algo.compute_diameter(None, AlgorithmConfig(graph_id=uuid4())) == 5
 
@@ -316,7 +318,7 @@ class TestConcreteAlgorithmImplementations:
         # Verify attributes
         assert TestDetector.name == "test_detector"
         assert TestDetector.category == "anomaly_detection"
-        
+
         # Test instance methods
         detector = TestDetector()
         assert detector.get_severity_score({}) == 5
@@ -363,12 +365,10 @@ class TestConcreteAlgorithmImplementations:
         # Verify attributes
         assert TestExtractor.name == "test_extractor"
         assert TestExtractor.category == "feature_extraction"
-        
+
         # Test instance methods
         extractor = TestExtractor()
-        features = extractor.extract_node_features(
-            None, "node1", AlgorithmConfig(graph_id=uuid4())
-        )
+        features = extractor.extract_node_features(None, "node1", AlgorithmConfig(graph_id=uuid4()))
         assert features == {"degree": 5, "betweenness": 0.5}
         edge_features = extractor.extract_edge_features(
             None, "A", "B", AlgorithmConfig(graph_id=uuid4())

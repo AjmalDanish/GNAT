@@ -57,13 +57,17 @@ class AlgorithmWithMissingMetadata(CentralityAlgorithm):
         """Return plain object without metadata and cached."""
         # Return a plain object (not AlgorithmResult) without metadata and cached
         # This triggers executor to add missing attributes
-        plain_obj = type('Result', (), {
-            'algorithm_name': self.name,
-            'graph_id': config.graph_id,
-            'execution_time_ms': 100,
-            'results': {"node1": 0.5},
-            # No 'metadata' or 'cached' attributes
-        })()
+        plain_obj = type(
+            "Result",
+            (),
+            {
+                "algorithm_name": self.name,
+                "graph_id": config.graph_id,
+                "execution_time_ms": 100,
+                "results": {"node1": 0.5},
+                # No 'metadata' or 'cached' attributes
+            },
+        )()
         return plain_obj
 
     def compute_for_node(self, backend, node_id, config):
@@ -98,10 +102,14 @@ class AlgorithmWithAllAttributesMissing(CentralityAlgorithm):
 
     def compute(self, backend, config):
         """Return plain object without ANY attributes."""
-        plain_obj = type('Result', (), {
-            'results': {"node1": 0.5},
-            # No algorithm_name, graph_id, execution_time_ms, metadata, cached
-        })()
+        plain_obj = type(
+            "Result",
+            (),
+            {
+                "results": {"node1": 0.5},
+                # No algorithm_name, graph_id, execution_time_ms, metadata, cached
+            },
+        )()
         return plain_obj
 
     def compute_for_node(self, backend, node_id, config):
@@ -331,9 +339,9 @@ class TestExecutorCoverage:
         result = self.executor.execute("missing_metadata_algo", config)
 
         # Verify executor added the missing attributes
-        assert hasattr(result, 'metadata')
+        assert hasattr(result, "metadata")
         assert result.metadata == {}
-        assert hasattr(result, 'cached')
+        assert hasattr(result, "cached")
         assert result.cached is False
 
     def test_all_optional_metadata_added_when_missing(self):
@@ -347,15 +355,15 @@ class TestExecutorCoverage:
         result = self.executor.execute("all_missing_algo", config)
 
         # Verify executor added all missing attributes
-        assert hasattr(result, 'execution_time_ms')
+        assert hasattr(result, "execution_time_ms")
         assert result.execution_time_ms >= 0
-        assert hasattr(result, 'algorithm_name')
+        assert hasattr(result, "algorithm_name")
         assert result.algorithm_name == "all_missing_algo"
-        assert hasattr(result, 'graph_id')
+        assert hasattr(result, "graph_id")
         assert result.graph_id == config.graph_id
-        assert hasattr(result, 'metadata')
+        assert hasattr(result, "metadata")
         assert result.metadata == {}
-        assert hasattr(result, 'cached')
+        assert hasattr(result, "cached")
         assert result.cached is False
 
     def test_cached_attribute_added_when_missing(self):
@@ -369,7 +377,7 @@ class TestExecutorCoverage:
         result = self.executor.execute("missing_metadata_algo", config)
 
         # Verify cached attribute was added
-        assert hasattr(result, 'cached')
+        assert hasattr(result, "cached")
         assert result.cached is False
 
     def test_community_detection_algorithm_execution(self):
@@ -448,7 +456,7 @@ class TestExecutorCoverage:
         """
         cache = CacheAdapter(CacheConfig())
         executor = AlgorithmExecutor(self.backend, cache, self.registry)
-        
+
         # Use a UNIQUE graph_id not used before in this test session
         unique_graph_id = uuid4()
         config = AlgorithmConfig(graph_id=unique_graph_id, use_cache=True)
@@ -482,8 +490,7 @@ class TestExecutorCoverage:
         assert cache.get_stats()["keys"] == 0
 
     @pytest.mark.skipif(
-        not hasattr(signal, 'SIGALRM'),
-        reason="SIGALRM not available on this platform"
+        not hasattr(signal, "SIGALRM"), reason="SIGALRM not available on this platform"
     )
     def test_timeout_finally_block_cleanup(self):
         """
