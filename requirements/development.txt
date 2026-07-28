@@ -12,7 +12,8 @@
 # ----------------------------------------------------------------------------
 django-debug-toolbar>=4.2.0,<5.0.0
 django-extensions>=3.2.0,<4.0.0
-silk>=5.1.0,<6.0.0
+# silk temporarily removed - requires Python <3.12
+# Will be re-added when Python 3.12 compatible version is available
 
 # ----------------------------------------------------------------------------
 # Code Quality & Formatting
