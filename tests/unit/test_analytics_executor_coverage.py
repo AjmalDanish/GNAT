@@ -15,19 +15,19 @@ from apps.graph_engine.analytics.exceptions import AlgorithmExecutionError
 from apps.graph_engine.analytics.interfaces import (
     AlgorithmConfig,
     AlgorithmResult,
+    AnomalyDetector,
     CentralityAlgorithm,
     CommunityDetectionAlgorithm,
-    PathAnalysisAlgorithm,
-    AnomalyDetector,
     FeatureExtractor,
+    PathAnalysisAlgorithm,
 )
+from apps.graph_engine.analytics.registry import get_registry
 from apps.graph_engine.analytics.services.executor import (
     AlgorithmExecutor,
     CacheAdapter,
     CacheConfig,
 )
 from apps.graph_engine.backends.networkx_backend import NetworkXBackend
-from apps.graph_engine.analytics.registry import get_registry
 
 
 class AlgorithmWithMissingMetadata(CentralityAlgorithm):

@@ -52,19 +52,19 @@ from apps.graph_engine.analytics.exceptions import AlgorithmExecutionError, Algo
 from apps.graph_engine.analytics.interfaces import (
     AlgorithmConfig,
     AlgorithmResult,
-    CommunityDetectionAlgorithm,
-    PathAnalysisAlgorithm,
     AnomalyDetector,
-    FeatureExtractor,
     CentralityAlgorithm,
+    CommunityDetectionAlgorithm,
+    FeatureExtractor,
+    PathAnalysisAlgorithm,
 )
+from apps.graph_engine.analytics.registry import get_registry
 from apps.graph_engine.analytics.services.executor import (
     AlgorithmExecutor,
     CacheAdapter,
     CacheConfig,
 )
 from apps.graph_engine.backends.networkx_backend import NetworkXBackend
-from apps.graph_engine.analytics.registry import get_registry
 
 # ============================================================================
 # Algorithm Implementations for Testing
@@ -912,7 +912,7 @@ class TestGraphCacheInvalidation:
         WHY: Internal tracking must be kept in sync with actual cache.
         WHEN: invalidate_graph is called on a graph with cached results.
         """
-        from apps.graph_engine.analytics.interfaces import CentralityAlgorithm, AlgorithmResult
+        from apps.graph_engine.analytics.interfaces import AlgorithmResult, CentralityAlgorithm
         from apps.graph_engine.analytics.registry import get_registry
 
         class CachedAlgo(CentralityAlgorithm):
