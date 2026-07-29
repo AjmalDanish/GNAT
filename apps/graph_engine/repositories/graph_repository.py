@@ -53,7 +53,9 @@ class GraphRepository:
             return None
 
     @staticmethod
-    def list_datasets(status: str | None = None, version: str | None = None) -> list[Dataset]:
+    def list_datasets(
+        status: str | None = None, version: str | None = None
+    ) -> list[Dataset]:
         """List datasets with optional filters.
 
         Args:
@@ -233,7 +235,9 @@ class GraphRepository:
         return counts
 
     @staticmethod
-    def get_top_cities_by_traffic(dataset_id: uuid.UUID, limit: int = 10) -> list[dict[str, Any]]:
+    def get_top_cities_by_traffic(
+        dataset_id: uuid.UUID, limit: int = 10
+    ) -> list[dict[str, Any]]:
         """Get top cities by total transaction traffic.
 
         Args:

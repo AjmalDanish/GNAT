@@ -48,7 +48,10 @@ class MockAlgorithm(CentralityAlgorithm):
 
     def compute(self, backend, config):
         return AlgorithmResult(
-            algorithm_name=self.name, graph_id=config.graph_id, execution_time_ms=0, results={}
+            algorithm_name=self.name,
+            graph_id=config.graph_id,
+            execution_time_ms=0,
+            results={},
         )
 
     def compute_for_node(self, backend, node_id, config):
@@ -402,7 +405,8 @@ class TestRegistryThreadSafety:
                 errors.append((algo_class.name, str(e)))
 
         threads = [
-            threading.Thread(target=register_algorithm, args=(alg,)) for alg in algorithm_classes
+            threading.Thread(target=register_algorithm, args=(alg,))
+            for alg in algorithm_classes
         ]
 
         for thread in threads:

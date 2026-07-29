@@ -59,7 +59,10 @@ class GraphBuilder:
 
         # Prefetch related data to minimize queries
         transactions = transactions.select_related(
-            "source_city", "destination_city", "source_city__country", "destination_city__country"
+            "source_city",
+            "destination_city",
+            "source_city__country",
+            "destination_city__country",
         ).iterator(chunk_size=batch_size)
 
         for transaction in transactions:
@@ -98,7 +101,10 @@ class GraphBuilder:
 
         transaction_count = 0
         transactions = transactions.select_related(
-            "source_city", "destination_city", "source_city__country", "destination_city__country"
+            "source_city",
+            "destination_city",
+            "source_city__country",
+            "destination_city__country",
         ).iterator()
 
         for transaction in transactions:
@@ -136,7 +142,10 @@ class GraphBuilder:
 
         transaction_count = 0
         transactions = transactions.select_related(
-            "source_city", "destination_city", "source_city__country", "destination_city__country"
+            "source_city",
+            "destination_city",
+            "source_city__country",
+            "destination_city__country",
         ).iterator()
 
         for transaction in transactions:
@@ -175,16 +184,21 @@ class GraphBuilder:
         )
 
         # Add edge (aggregate if edge already exists)
-        existing_edge = self.backend.get_edge_attributes(str(source_city.id), str(dest_city.id))
+        existing_edge = self.backend.get_edge_attributes(
+            str(source_city.id), str(dest_city.id)
+        )
 
         if existing_edge:
             # Aggregate values
             self.backend.add_edge(
                 str(source_city.id),
                 str(dest_city.id),
-                bandwidth=existing_edge.get("bandwidth", 0.0) + float(transaction.bandwidth),
-                latency=(existing_edge.get("latency", 0.0) + float(transaction.latency)) / 2,
-                packet_count=existing_edge.get("packet_count", 0) + transaction.packet_count,
+                bandwidth=existing_edge.get("bandwidth", 0.0)
+                + float(transaction.bandwidth),
+                latency=(existing_edge.get("latency", 0.0) + float(transaction.latency))
+                / 2,
+                packet_count=existing_edge.get("packet_count", 0)
+                + transaction.packet_count,
                 protocol=transaction.protocol,
             )
         else:

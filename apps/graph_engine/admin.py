@@ -37,7 +37,10 @@ class CountryAdmin(admin.ModelAdmin):
     fieldsets = (
         ("Identification", {"fields": ("iso_code", "iso_code_3", "country_name")}),
         ("Geographic Information", {"fields": ("continent", "latitude", "longitude")}),
-        ("Metadata", {"fields": ("id", "created_at", "updated_at"), "classes": ["collapse"]}),
+        (
+            "Metadata",
+            {"fields": ("id", "created_at", "updated_at"), "classes": ["collapse"]},
+        ),
     )
 
 
@@ -45,7 +48,14 @@ class CountryAdmin(admin.ModelAdmin):
 class CityAdmin(admin.ModelAdmin):
     """Admin configuration for City model."""
 
-    list_display = ["city_name", "country", "latitude", "longitude", "population", "created_at"]
+    list_display = [
+        "city_name",
+        "country",
+        "latitude",
+        "longitude",
+        "population",
+        "created_at",
+    ]
     list_filter = ["country", "created_at"]
     search_fields = ["city_name", "country__country_name"]
     readonly_fields = ["id", "created_at", "updated_at"]

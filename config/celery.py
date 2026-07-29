@@ -283,7 +283,9 @@ def task_success_handler(sender: Any = None, result: Any = None, **kwargs: Any) 
 
 
 @task_revoked.connect
-def task_revoked_handler(sender: Any = None, request: Any = None, **kwargs: Any) -> None:
+def task_revoked_handler(
+    sender: Any = None, request: Any = None, **kwargs: Any
+) -> None:
     """
     Handle task revoked signal.
 

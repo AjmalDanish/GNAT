@@ -204,7 +204,9 @@ class TestConcreteAlgorithmImplementations:
         # Test instance methods
         community = TestCommunity()
         assert (
-            community.compute_modularity(None, {"node1": 0}, AlgorithmConfig(graph_id=uuid4()))
+            community.compute_modularity(
+                None, {"node1": 0}, AlgorithmConfig(graph_id=uuid4())
+            )
             == 0.5
         )
         assert community.find_bridge_nodes(
@@ -368,7 +370,9 @@ class TestConcreteAlgorithmImplementations:
 
         # Test instance methods
         extractor = TestExtractor()
-        features = extractor.extract_node_features(None, "node1", AlgorithmConfig(graph_id=uuid4()))
+        features = extractor.extract_node_features(
+            None, "node1", AlgorithmConfig(graph_id=uuid4())
+        )
         assert features == {"degree": 5, "betweenness": 0.5}
         edge_features = extractor.extract_edge_features(
             None, "A", "B", AlgorithmConfig(graph_id=uuid4())

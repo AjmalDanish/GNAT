@@ -46,13 +46,17 @@ class Country(models.Model):
         OCEANIA = "OC"
         ANTARCTICA = "AN"
 
-    id: uuid.UUID = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id: uuid.UUID = models.UUIDField(
+        primary_key=True, default=uuid.uuid4, editable=False
+    )
     iso_code: str = models.CharField(max_length=2, unique=True, db_index=True)
     iso_code_3: str = models.CharField(
         max_length=3, unique=True, db_index=True, null=True, blank=True
     )
     country_name: str = models.CharField(max_length=100, unique=True, db_index=True)
-    continent: str = models.CharField(max_length=2, choices=Continent.choices, db_index=True)
+    continent: str = models.CharField(
+        max_length=2, choices=Continent.choices, db_index=True
+    )
     latitude: float = models.FloatField(null=True, blank=True)
     longitude: float = models.FloatField(null=True, blank=True)
     created_at: datetime = models.DateTimeField(auto_now_add=True, db_index=True)
@@ -66,7 +70,9 @@ class Country(models.Model):
             models.Index(fields=["country_name"], name="idx_country_name"),
             models.Index(fields=["iso_code"], name="idx_country_iso_code"),
             models.Index(fields=["continent"], name="idx_country_continent"),
-            models.Index(fields=["iso_code", "country_name"], name="idx_country_iso_name"),
+            models.Index(
+                fields=["iso_code", "country_name"], name="idx_country_iso_name"
+            ),
         ]
         ordering = ["country_name"]
 
@@ -97,7 +103,9 @@ class City(models.Model):
         timezone: IANA timezone identifier
     """
 
-    id: uuid.UUID = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id: uuid.UUID = models.UUIDField(
+        primary_key=True, default=uuid.uuid4, editable=False
+    )
     country: Country = models.ForeignKey(
         Country,
         on_delete=models.CASCADE,
@@ -118,12 +126,16 @@ class City(models.Model):
         verbose_name_plural = _("cities")
         constraints = [
             models.CheckConstraint(
-                check=models.Q(latitude__gte=-90, latitude__lte=90), name="valid_latitude"
+                check=models.Q(latitude__gte=-90, latitude__lte=90),
+                name="valid_latitude",
             ),
             models.CheckConstraint(
-                check=models.Q(longitude__gte=-180, longitude__lte=180), name="valid_longitude"
+                check=models.Q(longitude__gte=-180, longitude__lte=180),
+                name="valid_longitude",
             ),
-            models.CheckConstraint(check=models.Q(population__gte=0), name="positive_population"),
+            models.CheckConstraint(
+                check=models.Q(population__gte=0), name="positive_population"
+            ),
         ]
         indexes = [
             models.Index(fields=["country"], name="idx_city_country"),
@@ -179,7 +191,9 @@ class Dataset(models.Model):
         REAL = "real"
         HYBRID = "hybrid"
 
-    id: uuid.UUID = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id: uuid.UUID = models.UUIDField(
+        primary_key=True, default=uuid.uuid4, editable=False
+    )
     dataset_name: str = models.CharField(max_length=255, db_index=True)
     description: models.TextField = models.TextField(blank=True)
     source: str = models.CharField(
@@ -187,7 +201,11 @@ class Dataset(models.Model):
     )
     version: str = models.CharField(max_length=20, db_index=True)
     created_by = models.ForeignKey(
-        "accounts.User", on_delete=models.SET_NULL, null=True, blank=True, related_name="datasets"
+        "accounts.User",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="datasets",
     )
     created_at: datetime = models.DateTimeField(auto_now_add=True, db_index=True)
     status: str = models.CharField(
@@ -208,14 +226,17 @@ class Dataset(models.Model):
                 check=models.Q(record_count__gte=0), name="non_negative_record_count"
             ),
             models.CheckConstraint(
-                check=models.Q(version__regex=r"^\d+\.\d+\.\d+$"), name="valid_version_format"
+                check=models.Q(version__regex=r"^\d+\.\d+\.\d+$"),
+                name="valid_version_format",
             ),
         ]
         indexes = [
             models.Index(fields=["version"], name="idx_dataset_version"),
             models.Index(fields=["status"], name="idx_dataset_status"),
             models.Index(fields=["created_at"], name="idx_dataset_created_at"),
-            models.Index(fields=["status", "created_at"], name="idx_dataset_status_created"),
+            models.Index(
+                fields=["status", "created_at"], name="idx_dataset_status_created"
+            ),
         ]
         unique_together = [["dataset_name", "version"]]
         ordering = ["-created_at"]
@@ -296,15 +317,23 @@ class Transaction(models.Model):
         HIGH = "HIGH"
         CRITICAL = "CRITICAL"
 
-    id: uuid.UUID = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id: uuid.UUID = models.UUIDField(
+        primary_key=True, default=uuid.uuid4, editable=False
+    )
     dataset: Dataset = models.ForeignKey(
         Dataset, on_delete=models.CASCADE, related_name="transactions", db_index=True
     )
     source_city: City = models.ForeignKey(
-        City, on_delete=models.CASCADE, related_name="outgoing_transactions", db_index=True
+        City,
+        on_delete=models.CASCADE,
+        related_name="outgoing_transactions",
+        db_index=True,
     )
     destination_city: City = models.ForeignKey(
-        City, on_delete=models.CASCADE, related_name="incoming_transactions", db_index=True
+        City,
+        on_delete=models.CASCADE,
+        related_name="incoming_transactions",
+        db_index=True,
     )
     packet_count: int = models.IntegerField()
     packet_size: int = models.IntegerField(default=1500, db_index=True)
@@ -317,7 +346,9 @@ class Transaction(models.Model):
     timestamp: datetime = models.DateTimeField(db_index=True)
     is_anomaly: bool = models.BooleanField(default=False, db_index=True)
     connection_type: str = models.CharField(
-        max_length=20, choices=ConnectionType.choices, default=ConnectionType.CLIENT_SERVER
+        max_length=20,
+        choices=ConnectionType.choices,
+        default=ConnectionType.CLIENT_SERVER,
     )
     encryption: bool = models.BooleanField(default=False)
     risk_label: str = models.CharField(
@@ -332,21 +363,29 @@ class Transaction(models.Model):
             models.CheckConstraint(
                 check=models.Q(packet_count__gt=0), name="positive_packet_count"
             ),
-            models.CheckConstraint(check=models.Q(bandwidth__gte=0), name="non_negative_bandwidth"),
-            models.CheckConstraint(check=models.Q(latency__gte=0), name="non_negative_latency"),
             models.CheckConstraint(
-                check=~models.Q(source_city=models.F("id")), name="source_not_destination"
+                check=models.Q(bandwidth__gte=0), name="non_negative_bandwidth"
+            ),
+            models.CheckConstraint(
+                check=models.Q(latency__gte=0), name="non_negative_latency"
+            ),
+            models.CheckConstraint(
+                check=~models.Q(source_city=models.F("id")),
+                name="source_not_destination",
             ),
         ]
         indexes = [
             models.Index(fields=["dataset"], name="idx_transaction_dataset"),
             models.Index(fields=["timestamp"], name="idx_transaction_timestamp"),
             models.Index(fields=["source_city"], name="idx_transaction_source"),
-            models.Index(fields=["destination_city"], name="idx_transaction_destination"),
+            models.Index(
+                fields=["destination_city"], name="idx_transaction_destination"
+            ),
             models.Index(fields=["is_anomaly"], name="idx_transaction_is_anomaly"),
             models.Index(fields=["dataset", "timestamp"], name="idx_trx_dst_ts"),
             models.Index(
-                fields=["source_city", "destination_city"], name="idx_transaction_source_dest"
+                fields=["source_city", "destination_city"],
+                name="idx_transaction_source_dest",
             ),
         ]
         ordering = ["-timestamp"]

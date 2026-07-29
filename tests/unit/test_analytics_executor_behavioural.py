@@ -48,7 +48,10 @@ from uuid import uuid4
 
 import pytest
 
-from apps.graph_engine.analytics.exceptions import AlgorithmExecutionError, AlgorithmTimeoutError
+from apps.graph_engine.analytics.exceptions import (
+    AlgorithmExecutionError,
+    AlgorithmTimeoutError,
+)
 from apps.graph_engine.analytics.interfaces import (
     AlgorithmConfig,
     AlgorithmResult,
@@ -912,7 +915,10 @@ class TestGraphCacheInvalidation:
         WHY: Internal tracking must be kept in sync with actual cache.
         WHEN: invalidate_graph is called on a graph with cached results.
         """
-        from apps.graph_engine.analytics.interfaces import AlgorithmResult, CentralityAlgorithm
+        from apps.graph_engine.analytics.interfaces import (
+            AlgorithmResult,
+            CentralityAlgorithm,
+        )
         from apps.graph_engine.analytics.registry import get_registry
 
         class CachedAlgo(CentralityAlgorithm):

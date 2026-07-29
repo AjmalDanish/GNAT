@@ -74,7 +74,9 @@ class TestAlgorithmExecutionError:
 
     def test_basic_error(self):
         """Test creating algorithm execution error."""
-        error = AlgorithmExecutionError(message="Algorithm failed", algorithm_name="test_algo")
+        error = AlgorithmExecutionError(
+            message="Algorithm failed", algorithm_name="test_algo"
+        )
 
         assert error.message == "Algorithm failed"
         assert error.algorithm_name == "test_algo"
@@ -97,7 +99,9 @@ class TestAlgorithmExecutionError:
 
     def test_to_dict_includes_algorithm_name(self):
         """Test to_dict includes algorithm name."""
-        error = AlgorithmExecutionError(message="Algorithm failed", algorithm_name="test_algo")
+        error = AlgorithmExecutionError(
+            message="Algorithm failed", algorithm_name="test_algo"
+        )
 
         error_dict = error.to_dict()
 
@@ -118,7 +122,9 @@ class TestAlgorithmNotFoundError:
 
     def test_error_with_category(self):
         """Test error with category specified."""
-        error = AlgorithmNotFoundError(algorithm_name="nonexistent_algo", category="centrality")
+        error = AlgorithmNotFoundError(
+            algorithm_name="nonexistent_algo", category="centrality"
+        )
 
         assert "centrality" in error.message
         assert error.category == "centrality"
@@ -137,7 +143,9 @@ class TestAlgorithmNotFoundError:
 
     def test_message_format_with_category(self):
         """Test message format includes category when provided."""
-        error = AlgorithmNotFoundError(algorithm_name="test_algo", category="centrality")
+        error = AlgorithmNotFoundError(
+            algorithm_name="test_algo", category="centrality"
+        )
 
         message = error.message
         assert "test_algo" in message
@@ -178,7 +186,9 @@ class TestAlgorithmTimeoutError:
     def test_basic_error(self):
         """Test creating algorithm timeout error."""
         error = AlgorithmTimeoutError(
-            message="Algorithm timed out", algorithm_name="slow_algo", timeout_seconds=300
+            message="Algorithm timed out",
+            algorithm_name="slow_algo",
+            timeout_seconds=300,
         )
 
         assert error.message == "Algorithm timed out"
@@ -188,7 +198,9 @@ class TestAlgorithmTimeoutError:
 
     def test_to_dict_includes_timeout(self):
         """Test to_dict includes timeout information."""
-        error = AlgorithmTimeoutError(message="Timeout", algorithm_name="test", timeout_seconds=60)
+        error = AlgorithmTimeoutError(
+            message="Timeout", algorithm_name="test", timeout_seconds=60
+        )
 
         error_dict = error.to_dict()
 
@@ -210,7 +222,9 @@ class TestInvalidConfigError:
     def test_error_with_config_errors(self):
         """Test error with configuration errors."""
         errors = ["Missing parameter: alpha", "Invalid value: beta"]
-        error = InvalidConfigError(message="Invalid configuration", config_errors=errors)
+        error = InvalidConfigError(
+            message="Invalid configuration", config_errors=errors
+        )
 
         assert error.config_errors == errors
         assert error.details == {"config_errors": errors}
@@ -218,7 +232,9 @@ class TestInvalidConfigError:
     def test_error_with_details(self):
         """Test error with additional details."""
         error = InvalidConfigError(
-            message="Config invalid", config_errors=["error1"], details={"field": "resolution"}
+            message="Config invalid",
+            config_errors=["error1"],
+            details={"field": "resolution"},
         )
 
         assert error.details == {"config_errors": ["error1"], "field": "resolution"}
@@ -244,7 +260,9 @@ class TestCacheError:
 
     def test_error_with_details(self):
         """Test error with additional details."""
-        error = CacheError(message="Cache error", cache_key="my_key", details={"operation": "get"})
+        error = CacheError(
+            message="Cache error", cache_key="my_key", details={"operation": "get"}
+        )
 
         assert error.details == {"cache_key": "my_key", "operation": "get"}
 
@@ -262,7 +280,9 @@ class TestFeatureExtractionError:
 
     def test_error_with_feature_name(self):
         """Test error with feature name."""
-        error = FeatureExtractionError(message="Cannot compute feature", feature_name="degree")
+        error = FeatureExtractionError(
+            message="Cannot compute feature", feature_name="degree"
+        )
 
         assert error.feature_name == "degree"
         assert error.details == {"feature_name": "degree"}
@@ -270,7 +290,9 @@ class TestFeatureExtractionError:
     def test_error_with_details(self):
         """Test error with additional details."""
         error = FeatureExtractionError(
-            message="Feature error", feature_name="betweenness", details={"node_id": "test_node"}
+            message="Feature error",
+            feature_name="betweenness",
+            details={"node_id": "test_node"},
         )
 
         assert error.details == {"feature_name": "betweenness", "node_id": "test_node"}
@@ -314,7 +336,9 @@ class TestExceptionInheritance:
             except GraphAnalyticsError:
                 pass  # Expected
             else:
-                pytest.fail(f"{type(error).__name__} was not caught as GraphAnalyticsError")
+                pytest.fail(
+                    f"{type(error).__name__} was not caught as GraphAnalyticsError"
+                )
 
     def test_error_messages_are_descriptive(self):
         """Test that error messages are descriptive."""

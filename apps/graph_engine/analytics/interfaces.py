@@ -157,7 +157,9 @@ class CentralityAlgorithm(AlgorithmStrategy):
     category: str = "centrality"
 
     @abstractmethod
-    def compute(self, backend: GraphBackend, config: AlgorithmConfig) -> AlgorithmResult:
+    def compute(
+        self, backend: GraphBackend, config: AlgorithmConfig
+    ) -> AlgorithmResult:
         """
         Compute centrality for all nodes in the graph.
 
@@ -189,7 +191,10 @@ class CentralityAlgorithm(AlgorithmStrategy):
 
     @abstractmethod
     def get_top_nodes(
-        self, backend: GraphBackend, n: int = 10, config: Optional[AlgorithmConfig] = None
+        self,
+        backend: GraphBackend,
+        n: int = 10,
+        config: Optional[AlgorithmConfig] = None,
     ) -> List[Tuple[NodeID, float]]:
         """
         Get top N nodes by centrality score.
@@ -221,7 +226,9 @@ class CommunityDetectionAlgorithm(AlgorithmStrategy):
     category: str = "community"
 
     @abstractmethod
-    def detect_communities(self, backend: GraphBackend, config: AlgorithmConfig) -> AlgorithmResult:
+    def detect_communities(
+        self, backend: GraphBackend, config: AlgorithmConfig
+    ) -> AlgorithmResult:
         """
         Detect communities in the graph.
 
@@ -236,7 +243,10 @@ class CommunityDetectionAlgorithm(AlgorithmStrategy):
 
     @abstractmethod
     def compute_modularity(
-        self, backend: GraphBackend, partition: Dict[NodeID, int], config: AlgorithmConfig
+        self,
+        backend: GraphBackend,
+        partition: Dict[NodeID, int],
+        config: AlgorithmConfig,
     ) -> float:
         """
         Compute modularity score for a community partition.
@@ -255,7 +265,10 @@ class CommunityDetectionAlgorithm(AlgorithmStrategy):
 
     @abstractmethod
     def find_bridge_nodes(
-        self, backend: GraphBackend, partition: Dict[NodeID, int], config: AlgorithmConfig
+        self,
+        backend: GraphBackend,
+        partition: Dict[NodeID, int],
+        config: AlgorithmConfig,
     ) -> List[NodeID]:
         """
         Find nodes that connect different communities.
@@ -288,7 +301,11 @@ class PathAnalysisAlgorithm(AlgorithmStrategy):
 
     @abstractmethod
     def find_shortest_path(
-        self, backend: GraphBackend, source: NodeID, target: NodeID, config: AlgorithmConfig
+        self,
+        backend: GraphBackend,
+        source: NodeID,
+        target: NodeID,
+        config: AlgorithmConfig,
     ) -> AlgorithmResult:
         """
         Find shortest path between two nodes.
@@ -306,7 +323,12 @@ class PathAnalysisAlgorithm(AlgorithmStrategy):
 
     @abstractmethod
     def find_k_shortest_paths(
-        self, backend: GraphBackend, source: NodeID, target: NodeID, k: int, config: AlgorithmConfig
+        self,
+        backend: GraphBackend,
+        source: NodeID,
+        target: NodeID,
+        k: int,
+        config: AlgorithmConfig,
     ) -> List[List[NodeID]]:
         """
         Find k-shortest paths between two nodes.
@@ -324,7 +346,9 @@ class PathAnalysisAlgorithm(AlgorithmStrategy):
         pass
 
     @abstractmethod
-    def detect_cycles(self, backend: GraphBackend, config: AlgorithmConfig) -> AlgorithmResult:
+    def detect_cycles(
+        self, backend: GraphBackend, config: AlgorithmConfig
+    ) -> AlgorithmResult:
         """
         Detect cycles in the graph.
 
@@ -439,7 +463,9 @@ class FeatureExtractor(AlgorithmStrategy):
     category: str = "feature_extraction"
 
     @abstractmethod
-    def extract_features(self, backend: GraphBackend, config: AlgorithmConfig) -> AlgorithmResult:
+    def extract_features(
+        self, backend: GraphBackend, config: AlgorithmConfig
+    ) -> AlgorithmResult:
         """
         Extract features from the graph.
 
@@ -471,7 +497,11 @@ class FeatureExtractor(AlgorithmStrategy):
 
     @abstractmethod
     def extract_edge_features(
-        self, backend: GraphBackend, source: NodeID, target: NodeID, config: AlgorithmConfig
+        self,
+        backend: GraphBackend,
+        source: NodeID,
+        target: NodeID,
+        config: AlgorithmConfig,
     ) -> Dict[str, float]:
         """
         Extract features for a specific edge.

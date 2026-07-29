@@ -64,7 +64,9 @@ ALLOWED_HOSTS: list[str] = env.list("ALLOWED_HOSTS", default=["localhost", "127.
 
 # Trusted Origins for CSRF
 CSRF_TRUSTED_ORIGINS: list[str] = [
-    f"https://{host}" for host in ALLOWED_HOSTS if host not in ["localhost", "127.0.0.1"]
+    f"https://{host}"
+    for host in ALLOWED_HOSTS
+    if host not in ["localhost", "127.0.0.1"]
 ]
 
 # Admin URL
@@ -221,7 +223,9 @@ SESSION_CACHE_ALIAS: str = "sessions"
 # ============================================================================
 
 AUTH_PASSWORD_VALIDATORS: list[dict[str, str]] = [
-    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
+    {
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
+    },
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
@@ -237,7 +241,9 @@ AUTH_PASSWORD_VALIDATORS: list[dict[str, str]] = [
 # Session configuration
 SESSION_COOKIE_AGE: int = env("SESSION_COOKIE_AGE", default=86400)  # 24 hours
 SESSION_SAVE_EVERY_REQUEST: bool = env("SESSION_SAVE_EVERY_REQUEST", default=True)
-SESSION_EXPIRE_AT_BROWSER_CLOSE: bool = env("SESSION_EXPIRE_AT_BROWSER_CLOSE", default=False)
+SESSION_EXPIRE_AT_BROWSER_CLOSE: bool = env(
+    "SESSION_EXPIRE_AT_BROWSER_CLOSE", default=False
+)
 SESSION_COOKIE_HTTPONLY: bool = True
 SESSION_COOKIE_SAMESITE: str = "Lax"
 
@@ -457,7 +463,9 @@ SECURE_PROXY_SSL_HEADER: tuple[str, str] = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # HSTS (HTTP Strict Transport Security)
 SECURE_HSTS_SECONDS: int = env.int("SECURE_HSTS_SECONDS", default=0)
-SECURE_HSTS_INCLUDE_SUBDOMAINS: bool = env("SECURE_HSTS_INCLUDE_SUBDOMAINS", default=False)
+SECURE_HSTS_INCLUDE_SUBDOMAINS: bool = env(
+    "SECURE_HSTS_INCLUDE_SUBDOMAINS", default=False
+)
 SECURE_HSTS_PRELOAD: bool = env("SECURE_HSTS_PRELOAD", default=False)
 
 # Cookies
@@ -509,11 +517,14 @@ CELERY_BROKER_URL: str = env(
     "CELERY_BROKER_URL", default=env("REDIS_URL", default="redis://localhost:6379/0")
 )
 CELERY_RESULT_BACKEND: str = env(
-    "CELERY_RESULT_BACKEND", default=env("REDIS_URL", default="redis://localhost:6379/0")
+    "CELERY_RESULT_BACKEND",
+    default=env("REDIS_URL", default="redis://localhost:6379/0"),
 )
 CELERY_TASK_ALWAYS_EAGER: bool = env("CELERY_TASK_ALWAYS_EAGER", default=False)
 CELERY_TASK_ACKS_LATE: bool = env("CELERY_TASK_ACKS_LATE", default=True)
-CELERY_WORKER_PREFETCH_MULTIPLIER: int = env.int("CELERY_WORKER_PREFETCH_MULTIPLIER", default=1)
+CELERY_WORKER_PREFETCH_MULTIPLIER: int = env.int(
+    "CELERY_WORKER_PREFETCH_MULTIPLIER", default=1
+)
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP: bool = env(
     "CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP", default=True
 )
@@ -544,8 +555,12 @@ MODEL_ROOT.mkdir(parents=True, exist_ok=True)
 MODEL_CHECKPOINT_DIR: Path = Path(
     env("MODEL_CHECKPOINT_DIR", default=str(MODEL_ROOT / "checkpoints"))
 )
-MODEL_EXPORT_DIR: Path = Path(env("MODEL_EXPORT_DIR", default=str(MODEL_ROOT / "exported")))
-MODEL_TRAINED_DIR: Path = Path(env("MODEL_TRAINED_DIR", default=str(MODEL_ROOT / "trained")))
+MODEL_EXPORT_DIR: Path = Path(
+    env("MODEL_EXPORT_DIR", default=str(MODEL_ROOT / "exported"))
+)
+MODEL_TRAINED_DIR: Path = Path(
+    env("MODEL_TRAINED_DIR", default=str(MODEL_ROOT / "trained"))
+)
 
 
 # ============================================================================
@@ -576,7 +591,9 @@ API_V1_PREFIX: str = env("API_V1_PREFIX", default="api/v1")
 
 # OpenCage Geocoding API
 OPENCAGE_API_KEY: str = env("OPENCAGE_API_KEY", default="")
-OPENCAGE_BASE_URL: str = env("OPENCAGE_BASE_URL", default="https://api.opencagedata.com/geocode/v1")
+OPENCAGE_BASE_URL: str = env(
+    "OPENCAGE_BASE_URL", default="https://api.opencagedata.com/geocode/v1"
+)
 
 
 # ============================================================================

@@ -309,7 +309,9 @@ ADMIN_URL = env("ADMIN_URL", default="admin/")
 if ADMIN_URL == "admin/":
     import warnings
 
-    warnings.warn("Consider changing ADMIN_URL from default 'admin/' for security", UserWarning)
+    warnings.warn(
+        "Consider changing ADMIN_URL from default 'admin/' for security", UserWarning
+    )
 
 
 # ============================================================================

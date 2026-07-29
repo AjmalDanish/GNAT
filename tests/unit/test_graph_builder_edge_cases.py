@@ -4,9 +4,8 @@ Additional Unit Tests for GraphBuilder Service.
 Status: Phase 2 - Graph Construction Engine - Coverage Expansion
 """
 
-from django.utils import timezone
-
 import pytest
+from django.utils import timezone
 
 from apps.graph_engine.services.graph_builder import GraphBuilder
 

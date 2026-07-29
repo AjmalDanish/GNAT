@@ -16,7 +16,9 @@ from rest_framework.views import exception_handler
 logger = logging.getLogger(__name__)
 
 
-def custom_exception_handler(exc: Exception, context: dict[str, Any]) -> Response | None:
+def custom_exception_handler(
+    exc: Exception, context: dict[str, Any]
+) -> Response | None:
     """
     Custom exception handler for REST API.
 
@@ -41,7 +43,9 @@ def custom_exception_handler(exc: Exception, context: dict[str, Any]) -> Respons
         return response
 
     # Handle non-DRF exceptions
-    logger.error(f"Unhandled exception: {exc}", exc_info=True, extra={"context": context})
+    logger.error(
+        f"Unhandled exception: {exc}", exc_info=True, extra={"context": context}
+    )
 
     # Return a generic error response
     return Response(

@@ -26,11 +26,7 @@ from ..exceptions import (
     AlgorithmTimeoutError,
     InvalidConfigError,
 )
-from ..interfaces import (
-    AlgorithmConfig,
-    AlgorithmResult,
-    AlgorithmStrategy,
-)
+from ..interfaces import AlgorithmConfig, AlgorithmResult, AlgorithmStrategy
 from ..registry import AlgorithmRegistry, get_registry
 
 
@@ -142,7 +138,9 @@ class CacheAdapter:
         # Simple pattern matching for in-memory cache
         prefix = pattern.rstrip("*")
         keys_to_delete = [
-            key for key in self._cache.keys() if key.startswith(self.config.key_prefix + prefix)
+            key
+            for key in self._cache.keys()
+            if key.startswith(self.config.key_prefix + prefix)
         ]
 
         for key in keys_to_delete:
@@ -207,7 +205,10 @@ class AlgorithmExecutor:
         self._graph_cache_keys: Dict[UUID, set[str]] = {}
 
     def execute(
-        self, algorithm_name: str, config: AlgorithmConfig, timeout_seconds: Optional[int] = None
+        self,
+        algorithm_name: str,
+        config: AlgorithmConfig,
+        timeout_seconds: Optional[int] = None,
     ) -> AlgorithmResult:
         """
         Execute an algorithm.
@@ -233,7 +234,8 @@ class AlgorithmExecutor:
         errors = algorithm_class.validate_config(config)
         if errors:
             raise InvalidConfigError(
-                f"Invalid configuration for algorithm '{algorithm_name}'", config_errors=errors
+                f"Invalid configuration for algorithm '{algorithm_name}'",
+                config_errors=errors,
             )
 
         # Check cache
@@ -250,7 +252,9 @@ class AlgorithmExecutor:
 
         # Store in cache
         if config.use_cache:
-            self._store_in_cache(algorithm_name, config, result, config.cache_ttl_seconds)
+            self._store_in_cache(
+                algorithm_name, config, result, config.cache_ttl_seconds
+            )
 
         return result
 

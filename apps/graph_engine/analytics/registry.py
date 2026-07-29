@@ -15,9 +15,7 @@ from __future__ import annotations
 import threading
 from typing import Any, Callable, Dict, List, Optional, Type
 
-from .interfaces import (
-    AlgorithmStrategy,
-)
+from .interfaces import AlgorithmStrategy
 
 
 class AlgorithmRegistry:
@@ -101,7 +99,9 @@ class AlgorithmRegistry:
             "description": getattr(algorithm_class, "description", ""),
             "complexity_time": getattr(algorithm_class, "complexity_time", "Unknown"),
             "complexity_space": getattr(algorithm_class, "complexity_space", "Unknown"),
-            "recommended_max_nodes": getattr(algorithm_class, "recommended_max_nodes", 100_000),
+            "recommended_max_nodes": getattr(
+                algorithm_class, "recommended_max_nodes", 100_000
+            ),
         }
 
     def register_decorator(
@@ -124,7 +124,9 @@ class AlgorithmRegistry:
             Decorator function
         """
 
-        def decorator(algorithm_class: Type[AlgorithmStrategy]) -> Type[AlgorithmStrategy]:
+        def decorator(
+            algorithm_class: Type[AlgorithmStrategy],
+        ) -> Type[AlgorithmStrategy]:
             self.register(algorithm_class, name)
             return algorithm_class
 
@@ -146,7 +148,8 @@ class AlgorithmRegistry:
         if algorithm_name not in self._algorithms:
             available = ", ".join(self.list_algorithms())
             raise KeyError(
-                f"Algorithm '{algorithm_name}' not found. " f"Available algorithms: {available}"
+                f"Algorithm '{algorithm_name}' not found. "
+                f"Available algorithms: {available}"
             )
         return self._algorithms[algorithm_name]
 
@@ -235,7 +238,10 @@ class AlgorithmRegistry:
         del self._algorithms[algorithm_name]
 
         # Remove from category registry
-        if category in self._by_category and algorithm_name in self._by_category[category]:
+        if (
+            category in self._by_category
+            and algorithm_name in self._by_category[category]
+        ):
             del self._by_category[category][algorithm_name]
             if not self._by_category[category]:
                 del self._by_category[category]
@@ -260,7 +266,8 @@ class AlgorithmRegistry:
             "total_algorithms": len(self._algorithms),
             "total_categories": len(self._by_category),
             "algorithms_by_category": {
-                category: len(algorithms) for category, algorithms in self._by_category.items()
+                category: len(algorithms)
+                for category, algorithms in self._by_category.items()
             },
         }
 

@@ -6,9 +6,8 @@ This module contains unit tests for graph engine models.
 Status: Phase 2 - Issue #1
 """
 
-from django.utils import timezone
-
 import pytest
+from django.utils import timezone
 
 from apps.graph_engine.models import City, Country, Dataset, Transaction
 

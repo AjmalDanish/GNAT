@@ -59,7 +59,9 @@ class AnalyticsRepository(ABC):
         pass
 
     @abstractmethod
-    def get_latest_result(self, graph_id: UUID, algorithm_name: str) -> Optional[AlgorithmResult]:
+    def get_latest_result(
+        self, graph_id: UUID, algorithm_name: str
+    ) -> Optional[AlgorithmResult]:
         """
         Get latest result for a graph and algorithm.
 
@@ -184,7 +186,9 @@ class InMemoryAnalyticsRepository(AnalyticsRepository):
         stored = self._results.get(result_id)
         return stored.result if stored else None
 
-    def get_latest_result(self, graph_id: UUID, algorithm_name: str) -> Optional[AlgorithmResult]:
+    def get_latest_result(
+        self, graph_id: UUID, algorithm_name: str
+    ) -> Optional[AlgorithmResult]:
         """
         Get latest result for a graph and algorithm.
 
@@ -252,7 +256,9 @@ class InMemoryAnalyticsRepository(AnalyticsRepository):
             Number of records deleted
         """
         to_delete = [
-            rid for rid, stored in self._results.items() if stored.created_at < before_date
+            rid
+            for rid, stored in self._results.items()
+            if stored.created_at < before_date
         ]
 
         for rid in to_delete:
@@ -336,7 +342,8 @@ def create_repository(repository_type: str = "memory") -> AnalyticsRepository:
         raise NotImplementedError("Database repository not yet implemented")
     else:
         raise ValueError(
-            f"Unsupported repository type: {repository_type}. " f"Supported types: memory, database"
+            f"Unsupported repository type: {repository_type}. "
+            f"Supported types: memory, database"
         )
 
 

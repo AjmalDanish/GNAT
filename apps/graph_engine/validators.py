@@ -29,22 +29,34 @@ class CountryValidator:
     def validate_iso_code_2(code: str) -> None:
         """Validate 2-letter ISO code."""
         if not code or len(code) != 2:
-            raise ValidationError({"iso_code": _("ISO code must be exactly 2 characters.")})
+            raise ValidationError(
+                {"iso_code": _("ISO code must be exactly 2 characters.")}
+            )
         if not code.isupper():
-            raise ValidationError({"iso_code": _("ISO code must be uppercase letters.")})
+            raise ValidationError(
+                {"iso_code": _("ISO code must be uppercase letters.")}
+            )
         if not CountryValidator.ISO2_PATTERN.match(code):
-            raise ValidationError({"iso_code": _("Invalid ISO 3166-1 alpha-2 code format.")})
+            raise ValidationError(
+                {"iso_code": _("Invalid ISO 3166-1 alpha-2 code format.")}
+            )
 
     @staticmethod
     def validate_iso_code_3(code: str | None) -> None:
         """Validate 3-letter ISO code."""
         if code is not None:
             if len(code) != 3:
-                raise ValidationError({"iso_code_3": _("ISO 3 code must be exactly 3 characters.")})
+                raise ValidationError(
+                    {"iso_code_3": _("ISO 3 code must be exactly 3 characters.")}
+                )
             if not code.isupper():
-                raise ValidationError({"iso_code_3": _("ISO 3 code must be uppercase letters.")})
+                raise ValidationError(
+                    {"iso_code_3": _("ISO 3 code must be uppercase letters.")}
+                )
             if not CountryValidator.ISO3_PATTERN.match(code):
-                raise ValidationError({"iso_code_3": _("Invalid ISO 3166-1 alpha-3 code format.")})
+                raise ValidationError(
+                    {"iso_code_3": _("Invalid ISO 3166-1 alpha-3 code format.")}
+                )
 
     @staticmethod
     def validate_country_name(name: str) -> None:
@@ -52,7 +64,9 @@ class CountryValidator:
         if not name or len(name.strip()) == 0:
             raise ValidationError({"country_name": _("Country name cannot be empty.")})
         if len(name) > 100:
-            raise ValidationError({"country_name": _("Country name cannot exceed 100 characters.")})
+            raise ValidationError(
+                {"country_name": _("Country name cannot exceed 100 characters.")}
+            )
 
     @staticmethod
     def validate_latitude(latitude: float | None) -> None:
@@ -82,13 +96,17 @@ class CityValidator:
         if not name or len(name.strip()) == 0:
             raise ValidationError({"city_name": _("City name cannot be empty.")})
         if len(name) > 100:
-            raise ValidationError({"city_name": _("City name cannot exceed 100 characters.")})
+            raise ValidationError(
+                {"city_name": _("City name cannot exceed 100 characters.")}
+            )
 
     @staticmethod
     def validate_latitude(latitude: float) -> None:
         """Validate latitude coordinate."""
         if not -90 <= latitude <= 90:
-            raise ValidationError({"latitude": _("Latitude must be between -90 and 90 degrees.")})
+            raise ValidationError(
+                {"latitude": _("Latitude must be between -90 and 90 degrees.")}
+            )
 
     @staticmethod
     def validate_longitude(longitude: float) -> None:
@@ -103,7 +121,9 @@ class CityValidator:
         """Validate population."""
         if population is not None:
             if population < 0:
-                raise ValidationError({"population": _("Population cannot be negative.")})
+                raise ValidationError(
+                    {"population": _("Population cannot be negative.")}
+                )
 
     @staticmethod
     def validate_timezone(tz: str | None) -> None:
@@ -121,7 +141,9 @@ class TransactionValidator:
     def validate_packet_count(count: int) -> None:
         """Validate packet count."""
         if count <= 0:
-            raise ValidationError({"packet_count": _("Packet count must be a positive integer.")})
+            raise ValidationError(
+                {"packet_count": _("Packet count must be a positive integer.")}
+            )
 
     @staticmethod
     def validate_bandwidth(bandwidth: float) -> None:
@@ -144,9 +166,15 @@ class TransactionValidator:
             raise ValidationError({"latency": _("Latency must be a valid number.")})
 
     @staticmethod
-    def validate_source_not_equal_destination(source_id: str, destination_id: str) -> None:
+    def validate_source_not_equal_destination(
+        source_id: str, destination_id: str
+    ) -> None:
         """Validate source and destination are different cities."""
         if source_id == destination_id:
             raise ValidationError(
-                {"destination_city": _("Source and destination cannot be the same city.")}
+                {
+                    "destination_city": _(
+                        "Source and destination cannot be the same city."
+                    )
+                }
             )

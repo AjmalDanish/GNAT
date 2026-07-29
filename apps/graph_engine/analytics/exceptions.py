@@ -58,7 +58,10 @@ class AlgorithmExecutionError(GraphAnalyticsError):
     """
 
     def __init__(
-        self, message: str, algorithm_name: str, details: Optional[Dict[str, Any]] = None
+        self,
+        message: str,
+        algorithm_name: str,
+        details: Optional[Dict[str, Any]] = None,
     ) -> None:
         """
         Initialize algorithm execution error.
@@ -127,7 +130,10 @@ class InvalidGraphError(GraphAnalyticsError):
     """
 
     def __init__(
-        self, message: str, graph_id: Optional[str] = None, details: Optional[Dict[str, Any]] = None
+        self,
+        message: str,
+        graph_id: Optional[str] = None,
+        details: Optional[Dict[str, Any]] = None,
     ) -> None:
         """
         Initialize invalid graph error.
@@ -141,7 +147,9 @@ class InvalidGraphError(GraphAnalyticsError):
         super().__init__(
             message=message,
             error_code="INVALID_GRAPH_ERROR",
-            details={**details, "graph_id": graph_id} if details else {"graph_id": graph_id},
+            details=(
+                {**details, "graph_id": graph_id} if details else {"graph_id": graph_id}
+            ),
         )
 
 
@@ -172,9 +180,16 @@ class AlgorithmTimeoutError(GraphAnalyticsError):
             message=message,
             error_code="ALGORITHM_TIMEOUT",
             details=(
-                {**details, "algorithm_name": algorithm_name, "timeout_seconds": timeout_seconds}
+                {
+                    **details,
+                    "algorithm_name": algorithm_name,
+                    "timeout_seconds": timeout_seconds,
+                }
                 if details
-                else {"algorithm_name": algorithm_name, "timeout_seconds": timeout_seconds}
+                else {
+                    "algorithm_name": algorithm_name,
+                    "timeout_seconds": timeout_seconds,
+                }
             ),
         )
 
@@ -233,7 +248,11 @@ class CacheError(GraphAnalyticsError):
         super().__init__(
             message=message,
             error_code="CACHE_ERROR",
-            details={**details, "cache_key": cache_key} if details else {"cache_key": cache_key},
+            details=(
+                {**details, "cache_key": cache_key}
+                if details
+                else {"cache_key": cache_key}
+            ),
         )
 
 

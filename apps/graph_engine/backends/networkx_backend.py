@@ -104,7 +104,9 @@ class NetworkXBackend(GraphBackend):
 
     def connected_components(self) -> list[set[str]]:
         """Return weakly connected components."""
-        return [set(component) for component in nx.weakly_connected_components(self._graph)]
+        return [
+            set(component) for component in nx.weakly_connected_components(self._graph)
+        ]
 
     def shortest_path(
         self, source_id: str, target_id: str, weight: str | None = None
@@ -127,7 +129,9 @@ class NetworkXBackend(GraphBackend):
         """Return all attributes for a node."""
         return dict(self._graph.nodes[node_id])
 
-    def get_edge_attributes(self, source_id: str, target_id: str) -> dict[str, Any] | None:
+    def get_edge_attributes(
+        self, source_id: str, target_id: str
+    ) -> dict[str, Any] | None:
         """Return all attributes for an edge."""
         if self._graph.has_edge(source_id, target_id):
             return dict(self._graph.edges[source_id, target_id])
@@ -146,7 +150,10 @@ class NetworkXBackend(GraphBackend):
     def to_dict(self) -> dict[str, Any]:
         """Serialize graph to dictionary representation."""
         return {
-            "nodes": [{"id": node, **self.get_node_attributes(node)} for node in self.get_nodes()],
+            "nodes": [
+                {"id": node, **self.get_node_attributes(node)}
+                for node in self.get_nodes()
+            ],
             "edges": [
                 {
                     "source": source,

@@ -52,7 +52,9 @@ class CountryRepository:
     def search(query: str) -> list[Country]:
         """Search countries by name."""
         return list(
-            Country.objects.filter(Q(country_name__icontains=query) | Q(iso_code__icontains=query))
+            Country.objects.filter(
+                Q(country_name__icontains=query) | Q(iso_code__icontains=query)
+            )
         )
 
 
@@ -67,7 +69,9 @@ class CityRepository:
     @staticmethod
     def get_by_country(country_id: uuid.UUID) -> list[City]:
         """Get cities by country."""
-        return list(City.objects.filter(country_id=country_id).select_related("country"))
+        return list(
+            City.objects.filter(country_id=country_id).select_related("country")
+        )
 
     @staticmethod
     def get_all() -> list[City]:
@@ -113,7 +117,8 @@ class CityRepository:
         """Search cities by name."""
         return list(
             City.objects.select_related("country").filter(
-                Q(city_name__icontains=query) | Q(country__country_name__icontains=query)
+                Q(city_name__icontains=query)
+                | Q(country__country_name__icontains=query)
             )
         )
 
@@ -124,7 +129,9 @@ class DatasetRepository:
     @staticmethod
     def get_by_id(dataset_id: uuid.UUID) -> Dataset | None:
         """Get dataset by ID."""
-        return Dataset.objects.select_related("created_by").filter(id=dataset_id).first()
+        return (
+            Dataset.objects.select_related("created_by").filter(id=dataset_id).first()
+        )
 
     @staticmethod
     def get_by_name_and_version(name: str, version: str) -> Dataset | None:
@@ -144,7 +151,9 @@ class DatasetRepository:
     @staticmethod
     def get_recent(n: int = 10) -> list[Dataset]:
         """Get N most recent datasets."""
-        return list(Dataset.objects.select_related("created_by").order_by("-created_at")[:n])
+        return list(
+            Dataset.objects.select_related("created_by").order_by("-created_at")[:n]
+        )
 
     def create(
         self,
@@ -203,18 +212,18 @@ class TransactionRepository:
     def get_by_dataset(dataset_id: uuid.UUID) -> list[Transaction]:
         """Get transactions by dataset."""
         return list(
-            Transaction.objects.select_related("source_city", "destination_city", "dataset").filter(
-                dataset_id=dataset_id
-            )
+            Transaction.objects.select_related(
+                "source_city", "destination_city", "dataset"
+            ).filter(dataset_id=dataset_id)
         )
 
     @staticmethod
     def get_anomalies(dataset_id: uuid.UUID) -> list[Transaction]:
         """Get anomaly transactions for a dataset."""
         return list(
-            Transaction.objects.select_related("source_city", "destination_city", "dataset").filter(
-                dataset_id=dataset_id, is_anomaly=True
-            )
+            Transaction.objects.select_related(
+                "source_city", "destination_city", "dataset"
+            ).filter(dataset_id=dataset_id, is_anomaly=True)
         )
 
     @staticmethod
@@ -238,18 +247,26 @@ class TransactionRepository:
         # Calculate percentages
         total = stats["total_count"] or 0
         if total > 0:
-            stats["anomaly_percentage"] = round((stats["anomaly_count"] or 0) / total * 100, 2)
-            stats["normal_percentage"] = round((stats["normal_count"] or 0) / total * 100, 2)
+            stats["anomaly_percentage"] = round(
+                (stats["anomaly_count"] or 0) / total * 100, 2
+            )
+            stats["normal_percentage"] = round(
+                (stats["normal_count"] or 0) / total * 100, 2
+            )
         else:
             stats["anomaly_percentage"] = 0.0
             stats["normal_percentage"] = 0.0
 
         return stats
 
-    def create_batch(self, transactions_data: list[dict[str, Any]], batch_size: int = 1000) -> int:
+    def create_batch(
+        self, transactions_data: list[dict[str, Any]], batch_size: int = 1000
+    ) -> int:
         """Create transactions in batches."""
         created = 0
         for i in range(0, len(transactions_data), batch_size):
             batch = transactions_data[i : i + batch_size]
-            created += len(Transaction.objects.bulk_create([Transaction(**t) for t in batch]))
+            created += len(
+                Transaction.objects.bulk_create([Transaction(**t) for t in batch])
+            )
         return created

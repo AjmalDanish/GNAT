@@ -127,7 +127,9 @@ class TestGraphMetricsCoverage:
         metrics = GraphMetrics(backend)
 
         # Unweighted (hop count)
-        unweighted = metrics.find_shortest_paths(source_id="city1", target_id="city2", weight=None)
+        unweighted = metrics.find_shortest_paths(
+            source_id="city1", target_id="city2", weight=None
+        )
 
         # Weighted (latency)
         weighted = metrics.find_shortest_paths(

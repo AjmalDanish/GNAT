@@ -135,7 +135,9 @@ class GraphBackend(ABC):
         pass
 
     @abstractmethod
-    def get_edge_attributes(self, source_id: str, target_id: str) -> dict[str, Any] | None:
+    def get_edge_attributes(
+        self, source_id: str, target_id: str
+    ) -> dict[str, Any] | None:
         """Return all attributes for an edge."""
         pass
 
