@@ -1,0 +1,79 @@
+# ============================================================================
+# Global Network Anomaly Tracker (GNAT) - Project Configuration
+# ============================================================================
+# Tool configurations for black, isort, and other development tools
+# ============================================================================
+
+[tool.black]
+line-length = 88
+target-version = ['py312']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+  | migrations
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 88
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
+skip_gitignore = true
+skip = [
+    '.git',
+    '.mypy_cache',
+    '.pytest_cache',
+    '.ruff_cache',
+    '__pycache__',
+    '.venv',
+    'venv',
+    'build',
+    'dist',
+    'migrations',
+]
+
+[tool.pytest.ini_options]
+testpaths = ['tests']
+python_files = ['test_*.py']
+python_classes = ['Test*']
+python_functions = ['test_*']
+addopts = [
+    '--verbose',
+    '--tb=short',
+    '-ra',
+]
+django_settings_module = 'config.settings.testing'
+
+[tool.coverage.run]
+source = ['apps']
+omit = [
+    '*/migrations/*',
+    '*/tests/*',
+    '*/__pycache__/*',
+    '*/venv/*',
+    '*/.venv/*',
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    'pragma: no cover',
+    'def __repr__',
+    'raise AssertionError',
+    'raise NotImplementedError',
+    'if __name__ == .__main__.:',
+    'if TYPE_CHECKING:',
+    '@abstractmethod',
+]
